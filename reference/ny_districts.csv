@@ -1,0 +1,666 @@
+leaid,beds,name,county,lat,lon,LOGRADE,HIGRADE,AREALAND
+3602370,570101040000,Addison Central School District,Steuben County,42.1055267,-77.3180999,PK,12,432015988
+3605040,410401060000,Adirondack Central School District,Oneida County,43.4679829,-75.3045065,PK,12,944298594
+3602400,080101040000,Afton Central School District,Chenango County,42.230635,-75.5444701,PK,12,201596783
+3602430,142101040000,Akron Central School District,Erie County,43.0547091,-78.5092579,PK,12,207864859
+3602460,010100010000,Albany City School District,Albany County,42.6663936,-73.7986632,PK,12,55435347
+3602520,450101060000,Albion Central School District,Orleans County,43.2385832,-78.2022002,PK,12,335401940
+3602550,140101060000,Alden Central School District,Erie County,42.8984427,-78.5120358,PK,12,145064531
+3602580,180202040000,Alexander Central School District,Genesee County,42.9120708,-78.2507639,PK,12,206697754
+3602670,220202040000,Alexandria Central School District,Jefferson County,44.3190349,-75.8726595,PK,12,169553045
+3602700,020101040000,Alfred-Almond Central School District,Allegany County,42.2822818,-77.8042461,PK,12,261762736
+3600015,040302060000,Allegany-Limestone Central School District,Cattaraugus County,42.0798996,-78.5546211,PK,12,309406753
+3602820,460102040000,Altmar-Parish-Williamstown Central School District,Oswego County,43.4450481,-75.9834253,PK,12,440914496
+3602880,580303020000,Amagansett Union Free School District,Suffolk County,40.9714436,-72.0798101,PK,12,26432389
+3602920,140201060000,Amherst Central School District,Erie County,42.9636796,-78.7910002,PK,12,13093633
+3602940,580106030000,Amityville Union Free School District,Suffolk County,40.6780799,-73.4192667,PK,12,11274883
+3602970,270100010000,Amsterdam City School District,Montgomery County,42.9175778,-74.1823842,PK,12,202315025
+3603000,120102040000,Andes Central School District,Delaware County,42.1463843,-74.8020827,PK,12,238601404
+3603030,020601040000,Andover Central School District,Allegany County,42.1531325,-77.8033319,PK,12,143041632
+3603180,660405030000,Ardsley Union Free School District,Westchester County,41.0104879,-73.841932,KG,12,10838500
+3603210,640101040000,Argyle Central School District,Washington County,43.2327778,-73.4784207,KG,12,158999463
+3603240,571901040000,Arkport Central School District,Steuben County,42.4064004,-77.7002641,PK,12,163781189
+3603270,131601060000,Arlington Central School District,Dutchess County,41.6754964,-73.7678239,KG,12,300418547
+3603420,670201060000,Attica Central School District,Wyoming County,42.7911711,-78.3450183,PK,12,382924199
+3616170,090201040000,AuSable Valley Central School District,Clinton County,44.4536592,-73.63738,PK,12,719868350
+3603480,050100010000,Auburn City School District,Cayuga County,42.9041214,-76.5347083,PK,12,83624529
+3600016,491302060000,Averill Park Central School District,Rensselaer County,42.6314911,-73.5383533,KG,12,262482323
+3603630,570201040000,Avoca Central School District,Steuben County,42.4207155,-77.4471554,PK,12,240925157
+3603660,240101040000,Avon Central School District,Livingston County,42.9056968,-77.7423899,PK,12,130636691
+3603720,580101030000,Babylon Union Free School District,Suffolk County,40.6524138,-73.3334783,KG,12,26309457
+3603810,080201040000,Bainbridge-Guilford Central School District,Chenango County,42.3280467,-75.4777446,PK,12,274554710
+3603840,280210030000,Baldwin Union Free School District,Nassau County,40.650316,-73.6069207,KG,12,10642345
+3603870,420901060000,Baldwinsville Central School District,Onondaga County,43.1675638,-76.3604677,KG,12,201785923
+3603930,521301060000,Ballston Spa Central School District,Saratoga County,43.0091748,-73.8483666,PK,12,143025935
+3603960,401301040000,Barker Central School District,Niagara County,43.3113444,-78.5491573,PK,12,196501164
+3603990,180300010000,Batavia City School District,Genesee County,42.9908282,-78.1775105,PK,12,65281355
+3604050,570302060000,Bath Central School District,Steuben County,42.3298701,-77.345066,PK,12,248628011
+3604080,580501030000,Bay Shore Union Free School District,Suffolk County,40.7132969,-73.2572823,PK,12,21015091
+3604110,580505020000,Bayport-Blue Point Union Free School District,Suffolk County,40.7339369,-73.0451638,PK,12,13957807
+3604140,130200010000,Beacon City School District,Dutchess County,41.50847,-73.9611001,PK,12,51867976
+3604200,231301040000,Beaver River Central School District,Lewis County,43.9245132,-75.3191772,PK,12,603248101
+3619950,660102060000,Bedford Central School District,Westchester County,41.2047616,-73.6364108,KG,12,132772007
+3604290,090301060000,Beekmantown Central School District,Clinton County,44.7641044,-73.4797945,PK,12,231503540
+3604350,020801040000,Belfast Central School District,Allegany County,42.34353,-78.1232559,PK,12,179942618
+3604370,220909040000,Belleville Henderson Central School District,Jefferson County,43.8094488,-76.1767406,PK,12,243534470
+3604530,061001040000,Bemus Point Central School District,Chautauqua County,42.1759964,-79.3432677,PK,12,118991492
+3604620,490101040000,Berlin Central School District,Rensselaer County,42.6849354,-73.3843117,PK,12,414903769
+3604650,010201040000,Berne-Knox-Westerlo Central School District,Albany County,42.6050813,-74.0991687,PK,12,321290723
+3604710,010306060000,Bethlehem Central School District,Albany County,42.595435,-73.8778342,KG,12,117324811
+3604740,280521030000,Bethpage Union Free School District,Nassau County,40.7511558,-73.4836459,KG,12,11560131
+3604870,030200010000,Binghamton City School District,Broome County,42.1012396,-75.9109343,PK,12,30586872
+3624630,661905020000,Blind Brook-Rye Union Free School District,Westchester County,41.0361379,-73.6866419,KG,12,7110385
+3600012,022902040000,Bolivar-Richburg Central School District,Allegany County,42.0814234,-78.1705727,PK,12,254435962
+3605010,630101040000,Bolton Central School District,Warren County,43.5927836,-73.6402185,PK,12,127477042
+3601189,151801040000,Boquet Valley Central School District at Elizabethtown-Lewis-Westport,Essex County,44.229739,-73.5564719,PK,12,611831797
+3605220,570401040000,Bradford Central School District,Schuyler County,42.3479123,-77.0887455,PK,12,146567337
+3627960,510101040000,Brasher Falls Central School District,St. Lawrence County,44.8067908,-74.746751,PK,12,440125092
+3605280,580512030000,Brentwood Union Free School District,Suffolk County,40.774769,-73.2595691,PK,12,42995976
+3605310,480601060000,Brewster Central School District,Putnam County,41.4286863,-73.5901748,KG,12,105977993
+3605340,661402020000,Briarcliff Manor Union Free School District,Westchester County,41.1404895,-73.8268825,KG,12,17074697
+3605370,580909020000,Bridgehampton Union Free School District,Suffolk County,40.9144397,-72.3055055,KG,12,28306425
+3605460,260101060000,Brighton Central School District,Monroe County,43.1174078,-77.5717824,KG,12,20963922
+3600005,171102040000,Broadalbin-Perth Central School District,Fulton County,43.0607071,-74.1780323,PK,12,213823085
+3605580,261801060000,Brockport Central School District,Monroe County,43.2232522,-77.9288666,PK,12,201166408
+3605610,062301040000,Brocton Central School District,Chautauqua County,42.3798755,-79.4349846,PK,12,94145281
+3605640,660303030000,Bronxville Union Free School District,Westchester County,40.9394931,-73.8264399,KG,12,2518650
+3605670,250109040000,Brookfield Central School District,Madison County,42.8062219,-75.353859,PK,12,150410838
+3615780,580203020000,Brookhaven-Comsewogue Union Free School District,Suffolk County,40.9145647,-73.0463441,KG,12,17986739
+3605520,490202040000,Brunswick Central School District (Brittonkill),Rensselaer County,42.7811858,-73.5397038,KG,12,177997271
+3605820,161601040000,Brushton-Moira Central School District,Franklin County,44.7983914,-74.5013657,PK,12,288222323
+3605850,140600010000,Buffalo City School District,Erie County,42.8922399,-78.859438,PK,12,104572755
+3605940,520101060000,Burnt Hills-Ballston Lake Central School District,Saratoga County,42.929254,-73.9180792,PK,12,128991844
+3606060,661201060000,Byram Hills Central School District,Westchester County,41.1374167,-73.7001513,KG,12,54653603
+3606090,180701040000,Byron-Bergen Central School District,Genesee County,43.0768678,-78.020316,PK,12,197486134
+3606160,190301040000,Cairo-Durham Central School District,Greene County,42.3338862,-74.0757858,PK,12,303082988
+3606180,240201040000,Caledonia-Mumford Central School District,Livingston County,42.985041,-77.8521831,PK,12,153899742
+3606210,641610040000,Cambridge Central School District,Washington County,43.0294423,-73.3774441,PK,12,266359122
+3606240,410601040000,Camden Central School District,Oneida County,43.3822312,-75.7282032,PK,12,769387491
+3600020,570603040000,Campbell-Savona Central School District,Steuben County,42.2561247,-77.2293851,PK,12,246048982
+3606300,270301040000,Canajoharie Central School District,Montgomery County,42.8611401,-74.5315125,PK,12,257310950
+3606330,430300050000,Canandaigua City School District,Ontario County,42.8695105,-77.2964849,PK,12,208417210
+3606360,021102040000,Canaseraga Central School District,Allegany County,42.4421112,-77.8347102,PK,12,199909173
+3606390,250901060000,Canastota Central School District,Madison County,43.0848266,-75.7627084,PK,12,145168102
+3606420,600301040000,Candor Central School District,Tioga County,42.2477133,-76.3488168,KG,12,217432170
+3600124,571502060000,Canisteo-Greenwood Central School District,Steuben County,42.2095709,-77.6136146,PK,12,497761844
+3606470,510201060000,Canton Central School District,St. Lawrence County,44.5897131,-75.1816064,PK,12,329231796
+3606540,280411030000,Carle Place Union Free School District,Nassau County,40.751817,-73.6103278,KG,12,4127240
+3606570,480102060000,Carmel Central School District,Putnam County,41.4748591,-73.6999965,KG,12,198930961
+3606630,222201060000,Carthage Central School District,Jefferson County,43.9976666,-75.6087747,PK,12,354708012
+3606660,060401040000,Cassadaga Valley Central School District,Chautauqua County,42.2827353,-79.2765734,PK,12,356961416
+3606690,050401040000,Cato-Meridian Central School District,Cayuga County,43.174931,-76.5626485,PK,12,242551745
+3606720,190401060000,Catskill Central School District,Greene County,42.2153276,-73.9323384,PK,12,182778151
+3600024,042302040000,Cattaraugus-Little Valley Central School District,Cattaraugus County,42.3264259,-78.8257085,PK,12,478469717
+3606780,250201060000,Cazenovia Central School District,Madison County,42.9193281,-75.8284999,KG,12,285445858
+3606840,580233020000,Center Moriches Union Free School District,Suffolk County,40.7660095,-72.7970639,PK,12,13761901
+3606870,580513030000,Central Islip Union Free School District,Suffolk County,40.7874499,-73.191898,PK,12,21165485
+3606900,460801060000,Central Square Central School District,Oswego County,43.2784493,-76.0392021,PK,12,413072057
+3601087,212101040000,Central Valley Central School District,Herkimer County,42.9809757,-74.9999169,PK,12,137409104
+3606990,661004060000,Chappaqua Central School District,Westchester County,41.1772982,-73.7665646,KG,12,48378014
+3607050,120401040000,Charlotte Valley Central School District,Delaware County,42.4718671,-74.8369442,PK,12,197719862
+3607080,160801040000,Chateaugay Central School District,Franklin County,44.8944147,-74.0706781,PK,12,324286848
+3607110,101001040000,Chatham Central School District,Columbia County,42.3642085,-73.547109,PK,12,317611505
+3600018,060503040000,Chautauqua Lake Central School District,Chautauqua County,42.2252291,-79.4755584,PK,12,247508825
+3607170,090601020000,Chazy Union Free School District,Clinton County,44.8770231,-73.4310276,KG,12,120750680
+3607230,140701060000,Cheektowaga Central School District,Erie County,42.9001187,-78.7548223,PK,12,26250273
+3618600,140702030000,Cheektowaga-Maryvale Union Free School District,Erie County,42.9303832,-78.746486,PK,12,13676678
+3627000,140709030000,Cheektowaga-Sloan Union Free School District,Erie County,42.8841466,-78.7849049,PK,12,7967808
+3607260,030101060000,Chenango Forks Central School District,Broome County,42.2311935,-75.8509413,PK,12,146173313
+3607290,030701060000,Chenango Valley Central School District,Broome County,42.1497167,-75.8527582,PK,12,58526995
+3600006,472202040000,Cherry Valley-Springfield Central School District,Otsego County,42.7802181,-74.7822504,PK,12,362096560
+3607380,440201020000,Chester Union Free School District,Orange County,41.3579003,-74.2784302,KG,12,28167698
+3607470,251601060000,Chittenango Central School District,Madison County,43.0894278,-75.8798179,KG,12,165681167
+3607530,261501060000,Churchville-Chili Central School District,Monroe County,43.105196,-77.842075,PK,12,133127992
+3607560,110101040000,Cincinnatus Central School District,Cortland County,42.544774,-75.8828001,PK,12,373428114
+3607590,140801060000,Clarence Central School District,Erie County,43.0090774,-78.6198087,PK,12,153402027
+3620340,500101060000,Clarkstown Central School District,Rockland County,41.1415224,-73.9665279,PK,12,67861693
+3607680,140703020000,Cleveland Hill Union Free School District,Erie County,42.9384267,-78.7817784,PK,12,6466842
+3607710,510401040000,Clifton-Fine Central School District,St. Lawrence County,44.1812206,-74.9853568,PK,12,779517195
+3607770,411101060000,Clinton Central School District,Oneida County,43.0396127,-75.3875647,KG,12,96836808
+3607860,650301040000,Clyde-Savannah Central School District,Wayne County,43.0682693,-76.8268296,PK,12,228400494
+3607890,060701040000,Clymer Central School District,Chautauqua County,42.0539218,-79.6593903,PK,12,213755334
+3600010,541102060000,Cobleskill-Richmondville Central School District,Schoharie County,42.6630688,-74.5210176,PK,12,467913773
+3607980,010500010000,Cohoes City School District,Albany County,42.7732753,-73.7077344,PK,12,9771248
+3608010,580402060000,Cold Spring Harbor Central School District,Suffolk County,40.921298,-73.4659622,KG,12,40284329
+3608100,510501040000,Colton-Pierrepont Central School District,St. Lawrence County,44.4083352,-74.8305798,PK,12,620740038
+3608130,580410030000,Commack Union Free School District,Suffolk County,40.8392886,-73.286328,PK,12,33326207
+3608160,580507060000,Connetquot Central School District,Suffolk County,40.7670654,-73.1260042,PK,12,54619317
+3608250,471701040000,Cooperstown Central School District,Otsego County,42.7047047,-74.969609,PK,12,261173087
+3608280,230201040000,Copenhagen Central School District,Lewis County,43.8868936,-75.7217784,PK,12,259827931
+3608310,580105030000,Copiague Union Free School District,Suffolk County,40.6802555,-73.3952166,PK,12,11600595
+3608370,520401040000,Corinth Central School District,Saratoga County,43.2241396,-73.8749612,PK,12,195883293
+3608400,571000010000,Corning City School District,Steuben County,42.145932,-77.0590658,PK,12,603171506
+3608430,440301060000,Cornwall Central School District,Orange County,41.4186906,-74.0619581,KG,12,90437910
+3608460,110200010000,Cortland City School District,Cortland County,42.532505,-76.1895704,PK,12,126983036
+3608490,190501040000,Coxsackie-Athens Central School District,Greene County,42.3464825,-73.8446219,KG,12,158329757
+3608580,660202030000,Croton-Harmon Union Free School District,Westchester County,41.2111472,-73.878222,KG,12,31119583
+3608610,150203040000,Crown Point Central School District,Essex County,43.9507851,-73.5236094,PK,12,209269748
+3632010,022302040000,Cuba-Rushford Central School District,Allegany County,42.3093345,-78.2715825,PK,12,404612687
+3621450,241101040000,Dalton-Nunda Central School District (Keshequa),Livingston County,42.5590065,-77.9374789,PK,12,301581574
+3608790,241001060000,Dansville Central School District,Livingston County,42.5728487,-77.7340379,PK,12,321190355
+3608850,250301040000,DeRuyter Central School District,Madison County,42.7457017,-75.872637,KG,12,228026487
+3608880,580107030000,Deer Park Union Free School District,Suffolk County,40.7616544,-73.3208664,PK,12,15148018
+3608910,120501040000,Delaware Academy Central School District at Delhi,Delaware County,42.2966542,-74.9196167,KG,12,496014630
+3609030,140707030000,Depew Union Free School District,Erie County,42.8949763,-78.7001227,PK,12,13440123
+3609060,031301040000,Deposit Central School District,Delaware County,42.0872252,-75.4237425,PK,12,305953517
+3609120,660403030000,Dobbs Ferry Union Free School District,Westchester County,41.0136307,-73.8730384,KG,12,5393584
+3600001,211003040000,Dolgeville Central School District,Herkimer County,43.1864605,-74.7199209,KG,12,473225955
+3609210,130502020000,Dover Union Free School District,Dutchess County,41.7011513,-73.5772518,PK,12,169884171
+3609240,120301040000,Downsville Central School District,Delaware County,42.0766751,-75.0031661,KG,12,355508683
+3609330,610301060000,Dryden Central School District,Tompkins County,42.4896275,-76.3187651,PK,12,258010139
+3609360,530101040000,Duanesburg Central School District,Schenectady County,42.7640036,-74.1899535,PK,12,152094420
+3609390,680801040000,Dundee Central School District,Yates County,42.5092285,-76.9949267,PK,12,242904948
+3609420,060800010000,Dunkirk City School District,Chautauqua County,42.482319,-79.3164081,PK,12,37193167
+3609540,140301030000,East Aurora Union Free School District,Erie County,42.7371407,-78.639363,PK,12,82912694
+3604920,430501040000,East Bloomfield Central School District,Ontario County,42.8875573,-77.4521986,PK,12,172810366
+3609630,490301060000,East Greenbush Central School District,Rensselaer County,42.5755912,-73.6507497,KG,12,195799077
+3609660,580301020000,East Hampton Union Free School District,Suffolk County,40.9686821,-72.2005656,PK,12,64046634
+3609690,260801060000,East Irondequoit Central School District,Monroe County,43.2003083,-77.5506269,PK,12,20774306
+3609720,580503030000,East Islip Union Free School District,Suffolk County,40.7145479,-73.1698296,PK,12,31327096
+3609840,280203030000,East Meadow Union Free School District,Nassau County,40.7255725,-73.5600685,KG,12,21915906
+3609870,580234020000,East Moriches Union Free School District,Suffolk County,40.7692995,-72.7571082,PK,12,19518484
+3609900,580917020000,East Quogue Union Free School District,Suffolk County,40.8450758,-72.5725296,KG,12,21251517
+3627810,500402060000,East Ramapo Central School District (Spring Valley),Rockland County,41.1429685,-74.0602474,PK,12,90927556
+3609930,261313030000,East Rochester Union Free School District,Monroe County,43.1122815,-77.4930398,PK,12,7289079
+3609960,280219030000,East Rockaway Union Free School District,Nassau County,40.6411062,-73.6637006,PK,12,3095841
+3609990,420401060000,East Syracuse-Minoa Central School District,Onondaga County,43.0906784,-76.0158876,PK,12,120661685
+3610050,280402030000,East Williston Union Free School District,Nassau County,40.773079,-73.6216055,KG,12,11350459
+3610080,660301030000,Eastchester Union Free School District,Westchester County,40.9638844,-73.808303,KG,12,7043791
+3600125,580912060000,Eastport-South Manor Central School District,Suffolk County,40.8570419,-72.7878327,PK,12,93483490
+3610170,141201060000,Eden Central School District,Erie County,42.6455922,-78.8689349,PK,12,175231666
+3610200,660406030000,Edgemont Union Free School District,Westchester County,40.9986044,-73.8195808,KG,12,6984465
+3610230,520601080000,Edinburg Common School District,Saratoga County,43.2653287,-74.0748279,PK,12,227250881
+3610260,470501040000,Edmeston Central School District,Otsego County,42.7176176,-75.1811442,PK,12,251109170
+3600003,513102040000,Edwards-Knox Central School District,St. Lawrence County,44.3724184,-75.104459,PK,12,651867305
+3610380,180901040000,Elba Central School District,Genesee County,43.0834371,-78.170258,PK,12,111409193
+3610410,590801040000,Eldred Central School District,Sullivan County,41.5152316,-74.8513457,PK,12,261387006
+3610500,622002060000,Ellenville Central School District,Ulster County,41.7308657,-74.426559,KG,12,340998709
+3610530,040901040000,Ellicottville Central School District,Cattaraugus County,42.2604749,-78.6338296,PK,12,287125332
+3610560,070600010000,Elmira City School District,Chemung County,42.0619584,-76.8066813,PK,12,290027187
+3610590,070902060000,Elmira Heights Central School District,Chemung County,42.1242942,-76.8516125,PK,12,36922673
+3610650,660409020000,Elmsford Union Free School District,Westchester County,41.0515121,-73.8253377,PK,12,7470027
+3610680,580401020000,Elwood Union Free School District,Suffolk County,40.8474329,-73.3403427,KG,12,13616260
+3616560,141401060000,Evans-Brant Central School District (Lake Shore),Erie County,42.6289786,-79.0384448,PK,12,145784532
+3610860,420601040000,Fabius-Pompey Central School District,Onondaga County,42.8561737,-75.9887249,KG,12,229703703
+3610890,261301060000,Fairport Central School District,Monroe County,43.0836778,-77.4228786,PK,12,67763932
+3610920,061101040000,Falconer Central School District,Chautauqua County,42.1599751,-79.1525235,PK,12,191440612
+3610950,590501060000,Fallsburg Central School District,Sullivan County,41.7150273,-74.5788402,PK,12,183086651
+3610980,280522030000,Farmingdale Union Free School District,Nassau County,40.7221503,-73.4375816,PK,12,25439789
+3618330,421001060000,Fayetteville-Manlius Central School District,Onondaga County,42.9988028,-75.9718955,KG,12,111692307
+3611070,022001040000,Fillmore Central School District,Allegany County,42.4665759,-78.1179093,PK,12,287089642
+3621540,580514020000,Fire Island Union Free School District,Suffolk County,40.6372071,-73.1441,PK,12,19264243
+3611100,581004020000,Fishers Island Union Free School District,Suffolk County,41.270642,-72.0040694,PK,12,10504176
+3625320,442115020000,Florida Union Free School District,Orange County,41.3235436,-74.3847235,PK,12,53266213
+3611190,270601040000,Fonda-Fultonville Central School District,Montgomery County,42.8969803,-74.3604479,PK,12,327971839
+3611250,061503040000,Forestville Central School District,Chautauqua County,42.4455174,-79.1574016,PK,12,209999018
+3611280,640502040000,Fort Ann Central School District,Washington County,43.4662638,-73.5192555,PK,12,271268148
+3611310,640601020000,Fort Edward Union Free School District,Washington County,43.2708872,-73.5751468,PK,12,7437959
+3611370,270701040000,Fort Plain Central School District,Montgomery County,42.9445896,-74.6502896,PK,12,157280148
+3611400,210402060000,Frankfort-Schuyler Central School District,Herkimer County,43.0567382,-75.1078956,PK,12,107297918
+3611430,120701040000,Franklin Central School District,Delaware County,42.3495434,-75.1153987,PK,12,171865993
+3611490,041101040000,Franklinville Central School District,Cattaraugus County,42.3181183,-78.4508833,PK,12,330473686
+3611520,062201060000,Fredonia Central School District,Chautauqua County,42.4261478,-79.324101,PK,12,101948629
+3611550,280209030000,Freeport Union Free School District,Nassau County,40.6035099,-73.5697949,PK,12,16814822
+3611610,060301040000,Frewsburg Central School District,Chautauqua County,42.0442265,-79.1360997,PK,12,156166519
+3611640,021601040000,Friendship Central School District,Allegany County,42.2052124,-78.1389059,PK,12,104250996
+3611670,141604060000,Frontier Central School District,Erie County,42.749808,-78.8789678,PK,12,63429911
+3611700,460500010000,Fulton City School District,Oswego County,43.3380527,-76.4051733,PK,12,171370749
+3611730,520701040000,Galway Central School District,Saratoga County,43.0480699,-74.0286047,PK,12,250073272
+3611740,650902040000,Gananda Central School District,Wayne County,43.1137044,-77.314477,KG,12,42765810
+3611760,280218030000,Garden City Union Free School District,Nassau County,40.7266307,-73.6447593,KG,12,13799901
+3611860,480404020000,Garrison Union Free School District,Putnam County,41.3756559,-73.9232462,KG,12,50172975
+3611880,260401060000,Gates-Chili Central School District,Monroe County,43.1352759,-77.7119498,PK,12,50442371
+3611910,220401040000,General Brown Central School District,Jefferson County,44.0193254,-76.0322837,PK,12,210894657
+3600017,020702040000,Genesee Valley Central School District,Allegany County,42.2989432,-77.9868251,PK,12,304658581
+3611940,240401040000,Geneseo Central School District,Livingston County,42.7595492,-77.7789937,KG,12,187030158
+3611970,430700010000,Geneva City School District,Ontario County,42.8451504,-77.0094595,PK,12,103519077
+3622100,081401040000,Georgetown-South Otselic Central School District,Chenango County,42.7027268,-75.7393236,PK,12,302612533
+3612030,100902040000,Germantown Central School District,Columbia County,42.112098,-73.8017124,PK,12,158115896
+3604757,470202040000,Gilbertsville-Mount Upton Central School District,Otsego County,42.4506799,-75.3428467,PK,12,194045919
+3612120,540801040000,Gilboa-Conesville Central School District,Schoharie County,42.4040786,-74.4035903,PK,12,331440635
+3612180,280100010000,Glen Cove City School District,Nassau County,40.8914717,-73.6441437,PK,12,17243914
+3612240,630300010000,Glens Falls City School District,Warren County,43.315956,-73.6522869,PK,12,14659824
+3612270,170500010000,Gloversville City School District,Fulton County,43.1426052,-74.3809734,PK,12,223684851
+3612300,430901060000,Gorham-Middlesex Central School District (Marcus Whitman),Ontario County,42.76402,-77.1978699,PK,12,412876676
+3612330,440601040000,Goshen Central School District,Orange County,41.4072269,-74.3373221,KG,12,147256424
+3612360,511101060000,Gouverneur Central School District,St. Lawrence County,44.3472471,-75.4686797,PK,12,573651113
+3612390,042801060000,Gowanda Central School District,Cattaraugus County,42.4704169,-78.9633592,PK,12,245762038
+3607020,141501060000,Grand Island Central School District,Erie County,43.0197496,-78.9618817,PK,12,73229729
+3612450,640701040000,Granville Central School District,Washington County,43.415419,-73.2964081,PK,12,214693228
+3612510,280407030000,Great Neck Union Free School District,Nassau County,40.7991817,-73.7340485,PK,12,28879932
+3612630,260501060000,Greece Central School District,Monroe County,43.2359571,-77.6796458,PK,12,78013053
+3612660,010701030000,Green Island Union Free School District,Albany County,42.7474182,-73.6925716,PK,12,1935064
+3612720,660407060000,Greenburgh Central School District,Westchester County,41.0335882,-73.8024482,PK,12,16045623
+3612750,080601040000,Greene Central School District,Chenango County,42.3543792,-75.7627812,PK,12,333843997
+3612840,581010020000,Greenport Union Free School District,Suffolk County,41.1398039,-72.4051359,KG,12,12672946
+3612870,190701040000,Greenville Central School District,Greene County,42.4417041,-74.0373174,PK,12,348709852
+3612900,640801040000,Greenwich Central School District,Washington County,43.0767438,-73.5018814,PK,12,255865408
+3612960,442111020000,Greenwood Lake Union Free School District,Orange County,41.2141554,-74.2849794,KG,12,30874385
+3613020,610501040000,Groton Central School District,Tompkins County,42.598918,-76.3681327,PK,12,152493516
+3613080,010802060000,Guilderland Central School District,Albany County,42.7073378,-73.9547443,PK,12,121710657
+3613110,630801040000,Hadley-Luzerne Central School District,Warren County,43.3679683,-73.938844,PK,12,529008101
+3613230,480401040000,Haldane Central School District,Putnam County,41.4524958,-73.9030581,KG,12,86793319
+3613290,580405060000,Half Hollow Hills Central School District,Suffolk County,40.78763,-73.3767921,PK,12,81669435
+3613350,141601060000,Hamburg Central School District,Erie County,42.7021481,-78.8091257,PK,12,70884072
+3613380,250701040000,Hamilton Central School District,Madison County,42.8164723,-75.5258567,PK,12,127450362
+3613440,511201040000,Hammond Central School District,St. Lawrence County,44.4255573,-75.7140066,PK,12,234016080
+3613470,572901040000,Hammondsport Central School District,Steuben County,42.4480075,-77.183554,PK,12,188179997
+3613530,580905020000,Hampton Bays Union Free School District,Suffolk County,40.8397847,-72.511788,PK,12,28359796
+3613560,120906040000,Hancock Central School District,Delaware County,41.9834408,-75.231076,KG,12,342150543
+3613590,460701040000,Hannibal Central School District,Oswego County,43.3243483,-76.5624247,PK,12,215944122
+3613620,580406060000,Harborfields Central School District,Suffolk County,40.8808793,-73.3730037,PK,12,19361191
+3613710,030501040000,Harpursville Central School District,Broome County,42.1910842,-75.6699529,PK,12,236962350
+3613740,660501060000,Harrison Central School District,Westchester County,41.0235573,-73.7192332,KG,12,43422930
+3613770,230301040000,Harrisville Central School District,Lewis County,44.1307387,-75.3366535,PK,12,501404587
+3613830,641001040000,Hartford Central School District,Washington County,43.3488946,-73.4070677,PK,12,155228410
+3613950,660404030000,Hastings-on-Hudson Union Free School District,Westchester County,40.9899056,-73.8767059,KG,12,6402440
+3613980,580506030000,Hauppauge Union Free School District,Suffolk County,40.8225546,-73.2174664,KG,12,32514640
+3614010,500201060000,Haverstraw-Stony Point Central School District (North Rockland),Rockland County,41.2506538,-74.0170571,PK,12,132686729
+3614130,280201030000,Hempstead Union Free School District,Nassau County,40.7043272,-73.6237287,PK,12,8092960
+3614190,660203060000,Hendrick Hudson Central School District,Westchester County,41.252394,-73.9164064,KG,12,39041429
+3614220,210601060000,Herkimer Central School District,Herkimer County,43.0494703,-74.9753344,PK,12,64108016
+3614250,511301040000,Hermon-DeKalb Central School District,St. Lawrence County,44.4594526,-75.2946986,PK,12,255041799
+3614280,280409030000,Herricks Union Free School District,Nassau County,40.7653062,-73.6663956,PK,12,11189421
+3614310,512404040000,Heuvelton Central School District,St. Lawrence County,44.5750704,-75.4385099,PK,12,285383148
+3631710,280214030000,Hewlett-Woodmere Union Free School District,Nassau County,40.6368235,-73.701041,PK,12,9181754
+3614340,280517030000,Hicksville Union Free School District,Nassau County,40.7631926,-73.5252307,PK,12,16837764
+3614400,620803040000,Highland Central School District,Ulster County,41.7330209,-73.994865,KG,12,105072267
+3614430,440901040000,Highland Falls Central School District,Orange County,41.3636525,-74.0157898,PK,12,80176045
+3614460,261101060000,Hilton Central School District,Monroe County,43.2941206,-77.8010614,PK,12,170301583
+3614490,041401040000,Hinsdale Central School District,Cattaraugus County,42.1733567,-78.3963577,PK,12,149240108
+3614550,141701040000,Holland Central School District,Erie County,42.6509823,-78.5437077,PK,12,207652100
+3614580,412201060000,Holland Patent Central School District,Oneida County,43.2731236,-75.2807991,PK,12,311780821
+3614610,450704040000,Holley Central School District,Orleans County,43.2036345,-78.0567095,PK,12,146100097
+3614640,110701060000,Homer Central School District,Cortland County,42.696259,-76.1516425,PK,12,421666691
+3614670,431401040000,Honeoye Central School District,Ontario County,42.7767444,-77.5130331,PK,12,218729600
+3614700,260901060000,Honeoye Falls-Lima Central School District,Monroe County,42.9447619,-77.576664,PK,12,188868462
+3614730,491401040000,Hoosic Valley Central School District,Rensselaer County,42.8926049,-73.5591344,PK,12,181807842
+3614760,490501060000,Hoosick Falls Central School District,Rensselaer County,42.893068,-73.3522677,PK,12,241485024
+3614820,571800010000,Hornell City School District,Steuben County,42.3509112,-77.6119883,PK,12,92867342
+3614850,070901060000,Horseheads Central School District,Chemung County,42.1953441,-76.8143712,PK,12,360732567
+3614940,101300010000,Hudson City School District,Columbia County,42.2062684,-73.7602517,PK,12,166774052
+3614970,641301060000,Hudson Falls Central School District,Washington County,43.3230136,-73.5509913,PK,12,134775065
+3615060,190901040000,Hunter-Tannersville Central School District,Greene County,42.1899609,-74.2248691,PK,12,452116640
+3615090,580403030000,Huntington Union Free School District,Suffolk County,40.8790986,-73.4156996,PK,12,25779703
+3615180,130801060000,Hyde Park Central School District,Dutchess County,41.8057443,-73.87761,PK,12,174152705
+3615270,200401040000,Indian Lake Central School District,Hamilton County,43.7874285,-74.3219659,PK,12,652087379
+3615300,220301060000,Indian River Central School District,Jefferson County,44.1895353,-75.7115256,PK,12,643689403
+3615330,200501080000,Inlet Common School District,Hamilton County,43.7284248,-74.7376372,PK,12,161082794
+3615360,141301060000,Iroquois Central School District,Erie County,42.7957286,-78.5714269,KG,12,206171679
+3615450,660402020000,Irvington Union Free School District,Westchester County,41.0457153,-73.8662569,KG,12,11381687
+3615480,280231020000,Island Park Union Free School District,Nassau County,40.6053949,-73.6495539,PK,12,3845109
+3615510,280226030000,Island Trees Union Free School District,Nassau County,40.7293768,-73.5001204,KG,12,5384753
+3615540,580502020000,Islip Union Free School District,Suffolk County,40.7127385,-73.2199039,KG,12,13371783
+3615570,610600010000,Ithaca City School District,Tompkins County,42.407456,-76.469816,PK,12,402777556
+3615630,061700010000,Jamestown City School District,Chautauqua County,42.0813641,-79.2291151,PK,12,45638952
+3609090,420411060000,Jamesville-DeWitt Central School District,Onondaga County,43.0018152,-76.0689619,KG,12,65403297
+3600007,572702040000,Jasper-Troupsburg Central School District,Steuben County,42.0933452,-77.5103069,PK,12,352572542
+3615720,540901040000,Jefferson Central School District,Schoharie County,42.4846261,-74.6040905,PK,12,172326568
+3615810,280515030000,Jericho Union Free School District,Nassau County,40.7997408,-73.5651106,PK,12,31218420
+3615870,630601040000,Johnsburg Central School District,Warren County,43.6323673,-74.053966,KG,12,562547094
+3615900,031502060000,Johnson City Central School District,Broome County,42.1482949,-75.9632949,PK,12,56569966
+3615980,170600010000,Johnstown City School District,Fulton County,43.0111824,-74.4376564,PK,12,117803794
+3615990,420501060000,Jordan-Elbridge Central School District,Onondaga County,43.0560437,-76.4391738,PK,12,152474129
+3616080,660101030000,Katonah-Lewisboro Union Free School District,Westchester County,41.2641117,-73.605582,KG,12,112105333
+3616140,150601040000,Keene Central School District,Essex County,44.1803008,-73.8119989,PK,12,404044793
+3616200,450607040000,Kendall Central School District,Orleans County,43.327459,-78.0472442,PK,12,166284888
+3616230,142601030000,Kenmore-Tonawanda Union Free School District,Erie County,42.9807478,-78.8815337,PK,12,44318309
+3615210,101401040000,Kinderhook Central School District (Ichabod Crane),Columbia County,42.4001592,-73.7098076,KG,12,202449281
+3616260,580805060000,Kings Park Central School District,Suffolk County,40.9410687,-73.2639485,PK,12,28570734
+3616290,620600010000,Kingston City School District,Ulster County,41.9215837,-74.0250746,PK,12,233941120
+3604758,441202020000,Kiryas Joel Village Union Free School District,Ulster County,41.3410325,-74.1667123,PK,12,3785894
+3616380,221401040000,La Fargeville Central School District,Jefferson County,44.2065271,-75.9563637,PK,12,228574215
+3616410,420807040000,LaFayette Central School District,Onondaga County,42.9163666,-76.1167054,PK,12,114811435
+3616440,141800010000,Lackawanna City School District,Erie County,42.8182578,-78.8326479,PK,12,16958236
+3616470,630701040000,Lake George Central School District,Warren County,43.431204,-73.6797588,KG,12,124776695
+3616500,151102040000,Lake Placid Central School District,Essex County,44.2631588,-73.9522739,PK,12,451416243
+3616530,200601040000,Lake Pleasant Central School District,Hamilton County,43.5709075,-74.4285712,PK,12,477043829
+3616620,662401060000,Lakeland Central School District,Westchester County,41.3211143,-73.8694353,PK,12,71865270
+3616680,141901060000,Lancaster Central School District,Erie County,42.9105148,-78.6508157,PK,12,87143890
+3616710,610801040000,Lansing Central School District,Tompkins County,42.5684463,-76.5339057,KG,12,141814537
+3616740,490601060000,Lansingburgh Central School District,Rensselaer County,42.7895198,-73.6436235,PK,12,34370399
+3616800,470801040000,Laurens Central School District,Otsego County,42.5572069,-75.1111349,KG,12,141946511
+3616830,280215030000,Lawrence Union Free School District,Nassau County,40.5866773,-73.7301698,PK,12,22051236
+3616950,181001060000,Le Roy Central School District,Genesee County,42.988943,-78.0018659,PK,12,128312869
+3617130,670401040000,Letchworth Central School District,Wyoming County,42.6021234,-78.1566669,PK,12,350564067
+3617160,280205030000,Levittown Union Free School District,Nassau County,40.7140545,-73.5140908,PK,12,16453665
+3617190,400301060000,Lewiston-Porter Central School District,Niagara County,43.2182678,-78.9888099,PK,12,135071027
+3617220,590901060000,Liberty Central School District,Sullivan County,41.7926704,-74.7676045,PK,12,230261657
+3617380,580104030000,Lindenhurst Union Free School District,Suffolk County,40.6902983,-73.372555,KG,12,14836468
+3617430,511602040000,Lisbon Central School District,St. Lawrence County,44.7247809,-75.3295979,PK,12,222818037
+3617460,210800050000,Little Falls City School District,Herkimer County,43.0248275,-74.8430003,PK,12,139456660
+3617520,421501060000,Liverpool Central School District,Onondaga County,43.1349025,-76.207821,PK,12,59071751
+3617580,591302040000,Livingston Manor Central School District,Sullivan County,41.9593524,-74.7330342,KG,12,401709841
+3617640,240801060000,Livonia Central School District,Livingston County,42.7789741,-77.6625082,PK,12,199588685
+3617670,400400010000,Lockport City School District,Niagara County,43.16347,-78.6883118,PK,12,86630870
+3617700,280503060000,Locust Valley Central School District,Nassau County,40.897412,-73.5783172,PK,12,38671853
+3617730,280300010000,Long Beach City School District,Nassau County,40.5643878,-73.6388914,PK,12,11101069
+3617760,200701040000,Long Lake Central School District,Hamilton County,43.9969695,-74.5583579,PK,12,916471854
+3619230,580212060000,Longwood Central School District,Suffolk County,40.8734143,-72.9299237,PK,12,136733969
+3617820,230901040000,Lowville Academy and Central School District,Lewis County,43.7679301,-75.5896699,PK,12,664253349
+3617880,221301040000,Lyme Central School District,Jefferson County,44.0407768,-76.2088019,PK,12,150814151
+3617910,280220030000,Lynbrook Union Free School District,Nassau County,40.6512893,-73.6765535,KG,12,5495483
+3617940,421504020000,Lyncourt Union Free School District,Onondaga County,43.0840278,-76.127239,PK,12,3389104
+3617970,451001040000,Lyndonville Central School District,Orleans County,43.3286887,-78.3512845,PK,12,164284957
+3618030,650501040000,Lyons Central School District,Wayne County,43.0765945,-76.98882,PK,12,147457891
+3618080,251101040000,Madison Central School District,Madison County,42.9320343,-75.5084642,PK,12,143582022
+3618090,511901040000,Madrid-Waddington Central School District,St. Lawrence County,44.7954132,-75.1626672,PK,12,309617873
+3618120,480101060000,Mahopac Central School District,Putnam County,41.3814229,-73.7414441,KG,12,72001512
+3618150,031101060000,Maine-Endwell Central School District,Broome County,42.1905089,-76.0455882,PK,12,128548609
+3618180,161501060000,Malone Central School District,Franklin County,44.7736136,-74.2521609,PK,12,926060035
+3618210,280212030000,Malverne Union Free School District,Nassau County,40.6716667,-73.6599675,KG,12,5271102
+3618240,660701030000,Mamaroneck Union Free School District,Westchester County,40.9237522,-73.7399631,PK,12,16147763
+3624270,431101040000,Manchester-Shortsville Central School District,Ontario County,42.9803453,-77.2439211,PK,12,88895072
+3618270,280406030000,Manhasset Union Free School District,Nassau County,40.7960035,-73.6908123,KG,12,12489190
+3618450,110901040000,Marathon Central School District,Cortland County,42.4628007,-76.0632339,PK,12,273121463
+3618480,421101060000,Marcellus Central School District,Onondaga County,42.9460224,-76.3141831,KG,12,150474262
+3618510,121401040000,Margaretville Central School District,Delaware County,42.1480211,-74.5963433,PK,12,434375436
+3618540,650701040000,Marion Central School District,Wayne County,43.1580701,-77.1855497,PK,12,109005193
+3618570,621001060000,Marlboro Central School District,Ulster County,41.6208679,-73.9960747,KG,12,88054303
+3618630,280523030000,Massapequa Union Free School District,Nassau County,40.6136266,-73.4522359,KG,12,27721940
+3618660,512001060000,Massena Central School District,St. Lawrence County,44.9282784,-74.9059551,PK,12,277572902
+3600021,581012020000,Mattituck-Cutchogue Union Free School District,Suffolk County,41.0109952,-72.5423067,PK,12,59002314
+3618750,170801040000,Mayfield Central School District,Fulton County,43.1203881,-74.2685982,PK,12,121186271
+3618840,110304040000,McGraw Central School District,Cortland County,42.5967076,-76.0660734,PK,12,144867774
+3618900,521200050000,Mechanicville City School District,Saratoga County,42.8828474,-73.6838742,PK,12,42967805
+3618960,450801060000,Medina Central School District,Orleans County,43.2039841,-78.3793404,PK,12,218995774
+3618990,010615020000,Menands Union Free School District,Albany County,42.6911544,-73.7248673,KG,12,7002304
+3619170,460901060000,Mexico Central School District,Oswego County,43.4453803,-76.2667108,PK,12,325545015
+3619200,580211060000,Middle Country Central School District,Suffolk County,40.8670598,-73.0655128,PK,12,40339015
+3619260,541001040000,Middleburgh Central School District,Schoharie County,42.5456704,-74.3351574,PK,12,446377537
+3619320,441000010000,Middletown City School District,Orange County,41.4583894,-74.4240245,PK,12,71750127
+3619350,471101040000,Milford Central School District,Otsego County,42.5793154,-74.9571673,PK,12,149176112
+3619380,132201040000,Millbrook Central School District,Dutchess County,41.774243,-73.6922278,KG,12,202857505
+3619410,580208020000,Miller Place Union Free School District,Suffolk County,41.0053561,-72.9960646,KG,12,17046234
+3619500,280410030000,Mineola Union Free School District,Nassau County,40.7514107,-73.6433821,PK,12,6421622
+3619530,150801040000,Minerva Central School District,Essex County,43.8540576,-74.0551083,PK,12,406778538
+3619560,441101040000,Minisink Valley Central School District,Orange County,41.3930168,-74.5310317,PK,12,291865728
+3619650,441201060000,Monroe-Woodbury Central School District,Orange County,41.2985256,-74.1724507,KG,12,211167479
+3619710,580306020000,Montauk Union Free School District,Suffolk County,41.0362023,-71.9120182,PK,12,47888967
+3619740,591401060000,Monticello Central School District,Sullivan County,41.6242774,-74.6976082,PK,12,482040959
+3619800,051301040000,Moravia Central School District,Cayuga County,42.7458341,-76.3913426,PK,12,324284531
+3619830,150901040000,Moriah Central School District,Essex County,44.0561772,-73.5306139,PK,12,168659203
+3619860,471201040000,Morris Central School District,Otsego County,42.5799231,-75.21635,PK,12,173143626
+3619890,512101040000,Morristown Central School District,St. Lawrence County,44.5492717,-75.60581,PK,12,180376710
+3619920,250401040000,Morrisville-Eaton Central School District,Madison County,42.9085753,-75.6678387,PK,12,201351835
+3630930,212001040000,Mount Markham Central School District,Herkimer County,42.8859705,-75.183497,PK,12,360889615
+3620010,240901040000,Mount Morris Central School District,Livingston County,42.6942265,-77.876888,PK,12,97171938
+3620160,660801060000,Mount Pleasant Central School District,Westchester County,41.1041114,-73.7742272,KG,12,21423382
+3620040,580207020000,Mount Sinai Union Free School District,Suffolk County,40.9892784,-73.0282098,PK,12,16280007
+3620100,660900010000,Mount Vernon School District,Westchester County,40.9136005,-73.8290816,PK,12,11375581
+3620190,500108030000,Nanuet Union Free School District,Rockland County,41.0883832,-74.0148233,PK,12,13270350
+3620220,431201040000,Naples Central School District,Ontario County,42.6553985,-77.4005797,PK,12,297213929
+3620370,411501060000,New Hartford Central School District,Oneida County,43.0539723,-75.276522,KG,12,66196466
+3620430,101601040000,New Lebanon Central School District,Columbia County,42.4732846,-73.4632827,PK,12,203457029
+3620460,621101060000,New Paltz Central School District,Ulster County,41.7426,-74.121031,PK,12,211445667
+3620490,661100010000,New Rochelle City School District,Westchester County,40.9229257,-73.7799054,PK,12,26640876
+3620520,581015080000,New Suffolk Common School District,Suffolk County,40.980679,-72.4686815,PK,12,3284726
+3620580,300000010000,New York City Department Of Education,New York County,40.6624941,-73.9389041,PK,12,778246959
+3620610,411504020000,New York Mills Union Free School District,Oneida County,43.0997121,-75.289276,KG,12,6797993
+3620640,650101060000,Newark Central School District,Wayne County,43.0817269,-77.0999774,PK,12,157105557
+3620670,600402040000,Newark Valley Central School District,Tioga County,42.279093,-76.1909223,PK,12,371893994
+3620700,441600010000,Newburgh City School District,Orange County,41.5143438,-74.0491608,PK,12,88002839
+3620730,151001040000,Newcomb Central School District,Essex County,44.0168838,-74.1262263,PK,12,585832709
+3620760,400601060000,Newfane Central School District,Niagara County,43.2711079,-78.6990413,PK,12,146911943
+3620790,610901040000,Newfield Central School District,Tompkins County,42.3396391,-76.6068014,PK,12,157639775
+3620820,400800010000,Niagara Falls City School District,Niagara County,43.0921001,-79.0147247,PK,12,36471193
+3620850,400701060000,Niagara-Wheatfield Central School District,Niagara County,43.1252363,-78.9279181,KG,12,131023956
+3620880,530301060000,Niskayuna Central School District,Schenectady County,42.8207031,-73.8754547,KG,12,50429222
+3620910,580103030000,North Babylon Union Free School District,Suffolk County,40.7297121,-73.3341829,KG,12,13926812
+3620970,142201040000,North Collins Central School District,Erie County,42.5694606,-78.8772011,PK,12,148087394
+3621000,010623060000,North Colonie Central School District,Albany County,42.7494683,-73.756668,KG,12,76859923
+3631410,490801080000,North Greenbush Common School District (Williams),Rensselaer County,42.6854792,-73.6941392,KG,12,6943446
+3616980,651501060000,North Rose-Wolcott Central School District,Wayne County,43.2069756,-76.853494,PK,12,319688363
+3621180,661301040000,North Salem Central School District,Westchester County,41.3399141,-73.6042037,KG,12,68397354
+3626370,280501060000,North Shore Central School District,Nassau County,40.8362715,-73.623847,KG,12,20891518
+3621210,420303060000,North Syracuse Central School District,Onondaga County,43.1629563,-76.1050521,PK,12,166896143
+3621240,400900010000,North Tonawanda City School District,Niagara County,43.0457105,-78.8658822,PK,12,26140451
+3616960,630202040000,North Warren Central School District,Warren County,43.6951689,-73.781529,PK,12,362756702
+3630390,131101040000,Northeast Central School District,Dutchess County,41.8895649,-73.5499485,PK,12,215699778
+3621250,090501040000,Northeastern Clinton Central School District,Clinton County,44.9583075,-73.5587317,PK,12,321852392
+3621260,090901040000,Northern Adirondack Central School District,Clinton County,44.8247839,-73.8419104,PK,12,942962464
+3621270,580404030000,Northport-East Northport Union Free School District,Suffolk County,40.945382,-73.3508561,PK,12,40226591
+3621300,170901040000,Northville Central School District,Fulton County,43.2614684,-74.2787895,PK,12,350845775
+3621330,081200050000,Norwich City School District,Chenango County,42.5549297,-75.5840189,PK,12,277667971
+3621360,512201040000,Norwood-Norfolk Central School District,St. Lawrence County,44.7923022,-74.9853211,PK,12,216199501
+3621480,500304030000,Nyack Union Free School District,Rockland County,41.1061909,-73.9216585,PK,12,18785777
+3621510,181101040000,Oakfield-Alabama Central School District,Genesee County,43.0806811,-78.3216569,PK,12,179523997
+3621570,280211030000,Oceanside Union Free School District,Nassau County,40.6194822,-73.6339445,KG,12,23880588
+3621630,550101040000,Odessa-Montour Central School District,Schuyler County,42.3401835,-76.7545274,PK,12,245975810
+3621660,512300010000,Ogdensburg City School District,St. Lawrence County,44.6794455,-75.4961271,PK,12,47305374
+3621720,042400010000,Olean City School District,Cattaraugus County,42.0721361,-78.4269378,PK,12,48054060
+3600013,251400010000,Oneida City School District,Madison County,43.0982672,-75.6759611,PK,12,104002999
+3621780,471400010000,Oneonta City School District,Otsego County,42.4704735,-75.050447,PK,12,126834552
+3621810,421201040000,Onondaga Central School District,Onondaga County,42.9487972,-76.225503,PK,12,88161169
+3621840,621201060000,Onteora Central School District,Ulster County,42.035574,-74.295089,PK,12,707290843
+3601107,271201040000,Oppenheim-Ephratah-St. Johnsville Central School District,Montgomery County,43.0479826,-74.6492682,PK,12,301660592
+3621900,142301060000,Orchard Park Central School District,Erie County,42.7421812,-78.7355429,PK,12,128007170
+3621960,412901040000,Oriskany Central School District,Oneida County,43.1697679,-75.364614,PK,12,65434481
+3622020,661401030000,Ossining Union Free School District,Westchester County,41.1730201,-73.8507683,PK,12,33559071
+3622050,461300010000,Oswego City School District,Oswego County,43.4392235,-76.4807855,PK,12,160151255
+3629240,471601040000,Otego-Unadilla Central School District,Otsego County,42.3993276,-75.2411123,PK,12,242693407
+3622170,600601060000,Owego-Apalachin Central School District,Tioga County,42.07603,-76.2263626,PK,12,248602199
+3622260,081501040000,Oxford Academy and Central School District,Chenango County,42.4500993,-75.6462433,PK,12,296678364
+3622290,280506060000,Oyster Bay-East Norwich Central School District,Nassau County,40.8902289,-73.5247186,PK,12,33398591
+3621930,581002020000,Oysterponds Union Free School District,Suffolk County,41.1793456,-72.2417188,KG,12,21875232
+3622380,650901060000,Palmyra-Macedon Central School District,Wayne County,43.0641963,-77.2649329,PK,12,124912711
+3622410,061601040000,Panama Central School District,Chautauqua County,42.0573453,-79.4545441,PK,12,155172314
+3622440,512501040000,Parishville-Hopkinton Central School District,St. Lawrence County,44.5642976,-74.7389711,PK,12,563693739
+3622470,580224030000,Patchogue-Medford Union Free School District,Suffolk County,40.7830464,-73.0007298,PK,12,42515741
+3622500,181201040000,Pavilion Central School District,Genesee County,42.892629,-78.0257695,PK,12,199966509
+3622530,131201040000,Pawling Central School District,Dutchess County,41.5663211,-73.602529,PK,12,131953388
+3622560,500308030000,Pearl River Union Free School District,Rockland County,41.0556594,-73.9967715,PK,12,18165358
+3622650,661500010000,Peekskill City School District,Westchester County,41.2904915,-73.9222283,PK,12,9356452
+3622680,661601030000,Pelham Union Free School District,Westchester County,40.8999767,-73.8063646,KG,12,5632843
+3608340,181302040000,Pembroke Central School District,Genesee County,42.978975,-78.3642873,PK,12,180884549
+3622710,261201060000,Penfield Central School District,Monroe County,43.1424269,-77.4467832,KG,12,66565671
+3622740,680601060000,Penn Yan Central School District,Yates County,42.6469908,-77.0612297,PK,12,407997682
+3622770,671201060000,Perry Central School District,Wyoming County,42.7273422,-78.0032028,PK,12,175368091
+3622830,091101060000,Peru Central School District,Clinton County,44.5959142,-73.5558022,PK,12,337477289
+3622890,431301060000,Phelps-Clifton Springs Central School District,Ontario County,42.9520814,-77.0850246,PK,12,245465645
+3622920,462001060000,Phoenix Central School District,Oswego County,43.2649335,-76.3018011,PK,12,183552375
+3623010,440401060000,Pine Bush Central School District,Orange County,41.583896,-74.3574944,PK,12,278861830
+3623040,131301040000,Pine Plains Central School District,Dutchess County,41.9631338,-73.6805956,PK,12,362575953
+3623070,060601040000,Pine Valley Central School District (South Dayton),Chautauqua County,42.3265521,-79.0750743,PK,12,298538658
+3623130,200101080000,Piseco Common School District,Hamilton County,43.5434398,-74.5887862,KG,12,669230239
+3623160,261401060000,Pittsford Central School District,Monroe County,43.0645477,-77.5164203,KG,12,81428680
+3623190,280518030000,Plainedge Union Free School District,Nassau County,40.7099833,-73.4770657,KG,12,7214167
+3623220,280504060000,Plainview-Old Bethpage Central School District,Nassau County,40.7750814,-73.4651635,KG,12,21114151
+3623280,091200010000,Plattsburgh City School District,Clinton County,44.6943082,-73.4579389,PK,12,13906013
+3623310,660809030000,Pleasantville Union Free School District,Westchester County,41.1374799,-73.785475,KG,12,6319438
+3623340,660802040000,Pocantico Hills Central School District,Westchester County,41.0934438,-73.826419,PK,12,21722641
+3623370,211103040000,Poland Central School District,Herkimer County,43.435061,-74.8666161,PK,12,1212226354
+3623430,051101040000,Port Byron Central School District,Cayuga County,43.0352108,-76.656226,PK,12,186449990
+3623460,661904030000,Port Chester-Rye Union Free School District,Westchester County,41.005414,-73.6717551,PK,12,7799069
+3623490,580206020000,Port Jefferson Union Free School District,Suffolk County,41.0107763,-73.0824812,PK,12,10048782
+3623520,441800050000,Port Jervis City School District,Orange County,41.472038,-74.642462,PK,12,264656152
+3623580,280404030000,Port Washington Union Free School District,Nassau County,40.8499969,-73.7016892,PK,12,27140909
+3623640,042901040000,Portville Central School District,Cattaraugus County,42.0629532,-78.3275439,PK,12,187306906
+3623670,512902060000,Potsdam Central School District,St. Lawrence County,44.6658334,-74.9908267,PK,12,243582848
+3623760,131500010000,Poughkeepsie City School District,Dutchess County,41.6949196,-73.9210513,PK,12,13324433
+3623790,572301040000,Prattsburgh Central School District,Steuben County,42.5302171,-77.2813146,PK,12,221606066
+3623880,461801040000,Pulaski Central School District,Oswego County,43.555673,-76.1296,PK,12,162219874
+3623970,641401040000,Putnam Central School District,Washington County,43.7525625,-73.4158491,KG,12,88079541
+3624000,480503040000,Putnam Valley Central School District,Putnam County,41.3940109,-73.8375896,KG,12,75806628
+3624030,630902030000,Queensbury Union Free School District,Warren County,43.3292862,-73.6879917,PK,12,94329619
+3624060,580903020000,Quogue Union Free School District,Suffolk County,40.8000787,-72.5867698,KG,12,13523237
+3624090,043001040000,Randolph Central School District,Cattaraugus County,42.1095185,-78.9065757,PK,12,657781847
+3624120,200702020000,Raquette Lake Union Free School District,Hamilton County,43.8347597,-74.6959901,KG,12,203350313
+3624150,010402060000,Ravena-Coeymans-Selkirk Central School District,Albany County,42.5107803,-73.8602831,PK,12,219767859
+3624210,651503040000,Red Creek Central School District,Wayne County,43.2570915,-76.7004632,PK,12,203150547
+3624240,131701060000,Red Hook Central School District,Dutchess County,42.0218895,-73.8473923,KG,12,159686269
+3624360,411701040000,Remsen Central School District,Oneida County,43.3726018,-75.1483102,PK,12,236288531
+3624420,580901020000,Remsenburg-Speonk Union Free School District,Suffolk County,40.7913885,-72.7064163,PK,12,19135097
+3624450,491200010000,Rensselaer City School District,Rensselaer County,42.6464752,-73.7328284,PK,12,8214590
+3624480,131801040000,Rhinebeck Central School District,Dutchess County,41.9202937,-73.8696058,KG,12,147476828
+3624570,472001040000,Richfield Springs Central School District,Otsego County,42.8393058,-75.0124612,PK,12,226440892
+3624660,062401040000,Ripley Central School District,Chautauqua County,42.250769,-79.6950578,PK,12,77398935
+3624690,580602040000,Riverhead Central School District,Suffolk County,40.9955515,-72.7193066,PK,12,231534702
+3624750,261600010000,Rochester City School District,Monroe County,43.1688606,-77.6159307,PK,12,92621737
+3624780,280221030000,Rockville Centre Union Free School District,Nassau County,40.6688225,-73.6357919,KG,12,7685835
+3624840,580209020000,Rocky Point Union Free School District,Suffolk County,41.0092006,-72.9425671,PK,12,27608027
+3624900,411800010000,Rome City School District,Oneida County,43.2624852,-75.4873175,PK,12,248037404
+3624930,560603040000,Romulus Central School District,Seneca County,42.7748543,-76.8575872,PK,12,168122021
+3624960,620901060000,Rondout Valley Central School District,Ulster County,41.8356974,-74.2326304,PK,12,391971090
+3624990,280208030000,Roosevelt Union Free School District,Nassau County,40.6800607,-73.5858502,PK,12,4763712
+3625020,591301040000,Roscoe Central School District,Sullivan County,41.9599427,-74.9467775,PK,12,276193767
+3625050,280403030000,Roslyn Union Free School District,Nassau County,40.7989149,-73.6410984,PK,12,13946422
+3600004,530515060000,Rotterdam-Mohonasen Central School District,Schenectady County,42.7634398,-73.9309794,KG,12,28168200
+3625110,121502040000,Roxbury Central School District,Delaware County,42.2905734,-74.5607949,PK,12,217773575
+3625140,401201060000,Royalton-Hartland Central School District,Niagara County,43.1882431,-78.5421779,PK,12,206509790
+3625170,261701060000,Rush-Henrietta Central School District,Monroe County,43.0321531,-77.6533867,PK,12,162172168
+3625260,661800010000,Rye City School District,Westchester County,40.949678,-73.6727179,KG,12,13082239
+3625290,661901030000,Rye Neck Union Free School District,Westchester County,40.9490328,-73.7158318,KG,12,5059937
+3625350,580205060000,Sachem Central School District,Suffolk County,40.8159757,-73.0674131,PK,12,63445966
+3614880,221001040000,Sackets Harbor Central School District,Jefferson County,43.9228673,-76.2111291,PK,12,121101709
+3625380,580305020000,Sag Harbor Union Free School District,Suffolk County,40.9984353,-72.3323936,PK,12,34702833
+3625410,580910080000,Sagaponack Common School District,Suffolk County,40.9042284,-72.2579864,KG,12,11197582
+3625440,043200050000,Salamanca City School District,Cattaraugus County,42.150614,-78.7106061,PK,12,169671519
+3625470,641501040000,Salem Central School District,Washington County,43.1928645,-73.3352865,PK,12,210947584
+3625500,161201040000,Salmon River Central School District,Franklin County,44.9434638,-74.5334709,PK,12,326498107
+3625650,461901040000,Sandy Creek Central School District,Oswego County,43.6081058,-75.9267421,PK,12,507162522
+3600009,091402060000,Saranac Central School District,Clinton County,44.6608725,-73.7628484,KG,12,464273198
+3625740,161401060000,Saranac Lake Central School District,Franklin County,44.3861756,-74.1873314,PK,12,1656820758
+3625770,521800010000,Saratoga Springs City School District,Saratoga County,43.1086798,-73.8317646,PK,12,287162294
+3625800,621601060000,Saugerties Central School District,Ulster County,42.0842556,-74.0004752,PK,12,186153034
+3600002,411603040000,Sauquoit Valley Central School District,Oneida County,42.9881685,-75.2511347,PK,12,109261260
+3625920,580504030000,Sayville Union Free School District,Suffolk County,40.7267453,-73.0865102,KG,12,14508735
+3625950,662001030000,Scarsdale Union Free School District,Westchester County,40.9887772,-73.7759344,KG,12,18494057
+3625980,530501060000,Schalmont Central School District,Schenectady County,42.8172925,-74.0769668,KG,12,200735447
+3626010,530600010000,Schenectady City School District,Schenectady County,42.8025238,-73.9275578,PK,12,27991720
+3603060,470901040000,Schenevus Central School District,Otsego County,42.5822728,-74.8402267,PK,12,196494356
+3626070,491501040000,Schodack Central School District,Rensselaer County,42.5104065,-73.7209252,KG,12,84179617
+3626100,541201040000,Schoharie Central School District,Schoharie County,42.696456,-74.27872,PK,12,204314048
+3699997,,School District Not Defined,,43.2707085,-77.4350274,KG,12,197557494
+3626130,151401040000,Schroon Lake Central School District,Essex County,43.9362911,-73.7829288,PK,12,812477674
+3626160,521701040000,Schuylerville Central School District,Saratoga County,43.1025079,-73.6281758,KG,12,195623843
+3626190,022401040000,Scio Central School District,Allegany County,42.1477572,-78.0032937,PK,12,154756908
+3626310,530202060000,Scotia-Glenville Central School District,Schenectady County,42.8834689,-74.0030276,KG,12,91159716
+3626400,280206030000,Seaford Union Free School District,Nassau County,40.5975281,-73.4887723,KG,12,12238955
+3626430,560701060000,Seneca Falls Central School District,Seneca County,42.9098581,-76.7753325,PK,12,126936180
+3626580,541401040000,Sharon Springs Central School District,Schoharie County,42.7776927,-74.5999771,PK,12,133791486
+3626640,580701020000,Shelter Island Union Free School District,Suffolk County,41.0646648,-72.3213278,PK,12,31590493
+3626670,520302060000,Shenendehowa Central School District,Saratoga County,42.8647204,-73.7866396,KG,12,188194774
+3626700,082001040000,Sherburne-Earlville Central School District,Chenango County,42.7029297,-75.535877,PK,12,403735130
+3626730,062601040000,Sherman Central School District,Chautauqua County,42.1570484,-79.6306434,PK,12,267734032
+3626760,412000050000,Sherrill City School District,Oneida County,43.1337329,-75.5789036,PK,12,277890247
+3626840,580601040000,Shoreham-Wading River Central School District,Suffolk County,40.9975667,-72.8770906,KG,12,31499286
+3626850,121601060000,Sidney Central School District,Delaware County,42.2726589,-75.3230957,KG,12,225283656
+3626880,061501040000,Silver Creek Central School District,Chautauqua County,42.5256806,-79.1622237,PK,12,85256922
+3626940,421601060000,Skaneateles Central School District,Onondaga County,42.9051206,-76.410101,KG,12,173987770
+3627060,580801060000,Smithtown Central School District,Suffolk County,40.926887,-73.1930509,KG,12,68756947
+3627120,651201060000,Sodus Central School District,Wayne County,43.2302266,-77.048806,PK,12,147311240
+3627150,420702030000,Solvay Union Free School District,Onondaga County,43.0852474,-76.2282689,PK,12,17585924
+3627180,662101060000,Somers Central School District,Westchester County,41.3040552,-73.7264005,KG,12,74182043
+3627210,010601060000,South Colonie Central School District,Albany County,42.7329697,-73.8361386,PK,12,56077685
+3600008,580235060000,South Country Central School District,Suffolk County,40.773116,-72.9324403,PK,12,57836176
+3627240,521401040000,South Glens Falls Central School District,Saratoga County,43.2242078,-73.676066,PK,12,167711496
+3627300,580413030000,South Huntington Union Free School District,Suffolk County,40.8272586,-73.4089258,PK,12,28646424
+3602340,220101040000,South Jefferson Central School District,Jefferson County,43.7979482,-75.9519027,PK,12,572807055
+3627330,121702040000,South Kortright Central School District,Delaware County,42.3606034,-74.728052,PK,12,259216667
+3627360,231101040000,South Lewis Central School District,Lewis County,43.6573026,-75.3425891,PK,12,946004238
+3627450,500301060000,South Orangetown Central School District,Rockland County,41.0442515,-73.9301048,PK,12,36564770
+3622140,560501040000,South Seneca Central School District,Seneca County,42.6307881,-76.7927236,PK,12,274040989
+3627540,580906030000,Southampton Union Free School District,Suffolk County,40.8904449,-72.3917048,PK,12,81845753
+3627570,050701040000,Southern Cayuga Central School District,Cayuga County,42.7230638,-76.5889622,PK,12,379110337
+3627620,581005020000,Southold Union Free School District,Suffolk County,41.1015778,-72.50556,PK,12,34654991
+3627660,060201060000,Southwestern Central School District at Jamestown,Chautauqua County,42.0474503,-79.3207104,PK,12,111991923
+3606500,131602020000,Spackenkill Union Free School District,Dutchess County,41.6563123,-73.9266607,KG,12,16123343
+3627750,600801040000,Spencer-Van Etten Central School District,Tioga County,42.2110574,-76.5384934,PK,12,375087073
+3627780,261001060000,Spencerport Central School District,Monroe County,43.1891402,-77.788215,PK,12,94491100
+3627900,580304020000,Springs Union Free School District,Suffolk County,41.0598833,-72.1267305,PK,12,34114472
+3612990,141101060000,Springville-Griffith Institute Central School,Erie County,42.5442291,-78.7016401,PK,12,362159507
+3627990,161801040000,St. Regis Falls Central School District,Franklin County,44.5765263,-74.5129478,KG,12,713296743
+3628020,121701040000,Stamford Central School District,Delaware County,42.4218364,-74.637218,PK,12,126843219
+3628050,401001060000,Starpoint Central School District,Niagara County,43.1242341,-78.7774589,PK,12,179648655
+3628110,522001040000,Stillwater Central School District,Saratoga County,42.9775865,-73.6781905,PK,12,125202645
+3628140,251501040000,Stockbridge Valley Central School District,Madison County,42.9901273,-75.6060726,PK,12,113533533
+3628320,500401060000,Suffern Central School District,Rockland County,41.1589583,-74.1399053,PK,12,105813235
+3600023,591502040000,Sullivan West Central School District,Sullivan County,41.7475255,-74.9897911,PK,12,649672933
+3628380,030601060000,Susquehanna Valley Central School District,Broome County,42.0377154,-75.8644758,KG,12,159392986
+3628500,140207060000,Sweet Home Central School District,Erie County,43.016504,-78.8056595,PK,12,35650752
+3628560,280502060000,Syosset Central School District,Nassau County,40.8178722,-73.4928744,PK,12,35251328
+3628590,421800010000,Syracuse City School District,Onondaga County,43.0406803,-76.1437249,PK,12,64903079
+3628620,100501040000,Taconic Hills Central School District,Columbia County,42.1782984,-73.5859503,PK,12,514785238
+3607650,220701040000,Thousand Islands Central School District,Jefferson County,44.1648461,-76.1774699,KG,12,358056444
+3628200,580201060000,Three Village Central School District,Suffolk County,40.9523569,-73.1236965,KG,12,57400341
+3628680,151501060000,Ticonderoga Central School District,Essex County,43.7899025,-73.524273,PK,12,360956652
+3628710,600903040000,Tioga Central School District,Tioga County,42.0771778,-76.3897768,PK,12,238568958
+3628740,142500010000,Tonawanda City School District,Erie County,43.0105194,-78.8805381,PK,12,9850439
+3628800,211901020000,Town of Webb Union Free School District,Herkimer County,43.828826,-75.0017722,PK,12,1193976934
+3628890,591201040000,Tri-Valley Central School District,Sullivan County,41.9023511,-74.5308446,PK,12,498024614
+3628950,491700010000,Troy City School District,Rensselaer County,42.7260841,-73.6701424,PK,12,26625568
+3628980,611001040000,Trumansburg Central School District,Tompkins County,42.5053983,-76.6814151,PK,12,206459602
+3629070,580913080000,Tuckahoe Common School District,Suffolk County,40.8833165,-72.4528214,PK,12,16735417
+3629040,660302030000,Tuckahoe Union Free School District,Westchester County,40.9409535,-73.8145775,PK,12,3061680
+3629130,421902040000,Tully Central School District,Onondaga County,42.8195453,-76.15553,PK,12,201870950
+3629160,160101060000,Tupper Lake Central School District,Franklin County,44.2215393,-74.5642671,PK,12,701395072
+3629190,441903020000,Tuxedo Union Free School District,Orange County,41.1925323,-74.2261559,PK,12,61484075
+3600019,081003040000,Unadilla Valley Central School District,Chenango County,42.6099222,-75.3614341,PK,12,322245495
+3628650,660401030000,Union Free School District of the Tarrytowns,Westchester County,41.092531,-73.8692947,PK,12,12281678
+3629250,051901040000,Union Springs Central School District,Cayuga County,42.8788957,-76.6594411,PK,12,183963907
+3610710,031501060000,Union-Endicott Central School District,Broome County,42.1172269,-76.1009437,PK,12,75539351
+3629280,280202030000,Uniondale Union Free School District,Nassau County,40.7139585,-73.5972701,PK,12,17207631
+3629370,412300010000,Utica City School District,Oneida County,43.0961484,-75.2261444,PK,12,43310457
+3629400,660805030000,Valhalla Union Free School District,Westchester County,41.0725845,-73.7793517,KG,12,13137184
+3619680,441301060000,Valley Central School District (Montgomery),Orange County,41.5248898,-74.2255493,PK,12,203982898
+3622200,211701040000,Van Hornesville-Owen D. Young Central School District,Herkimer County,42.9159608,-74.8596902,KG,12,171696190
+3629610,031601060000,Vestal Central School District,Broome County,42.0517271,-76.0373258,PK,12,133176159
+3629640,431701060000,Victor Central School District,Ontario County,42.99186,-77.3958785,PK,12,151233237
+3629670,011003060000,Voorheesville Central School District,Albany County,42.644786,-73.9539335,KG,12,94193825
+3629760,580302080000,Wainscott Common School District,Suffolk County,40.9437383,-72.2421818,KG,12,18088334
+3629790,621801060000,Wallkill Central School District,Ulster County,41.6348321,-74.1477247,PK,12,210492468
+3629820,121901040000,Walton Central School District,Delaware County,42.1745781,-75.1620536,PK,12,422364641
+3629850,280223030000,Wantagh Union Free School District,Nassau County,40.6194604,-73.507665,KG,12,12725017
+3629880,132101060000,Wappingers Central School District,Dutchess County,41.5695864,-73.8447286,KG,12,238620129
+3629910,631201040000,Warrensburg Central School District,Warren County,43.5123512,-73.8818248,PK,12,440110723
+3629940,671501040000,Warsaw Central School District,Wyoming County,42.7222805,-78.1887715,PK,12,198390405
+3629970,442101060000,Warwick Valley Central School District,Orange County,41.2698361,-74.3745496,PK,12,196467230
+3630030,440102060000,Washingtonville Central School District,Orange County,41.4312628,-74.1791003,PK,12,144320828
+3630060,522101030000,Waterford-Halfmoon Union Free School District,Saratoga County,42.8068299,-73.685315,KG,12,16893916
+3600014,561006060000,Waterloo Central School District,Seneca County,42.9199214,-76.8879999,PK,12,217269750
+3630120,222000010000,Watertown City School District,Jefferson County,43.9657525,-75.8948719,PK,12,74483870
+3630160,411902040000,Waterville Central School District,Oneida County,42.9296596,-75.3941388,PK,12,191371498
+3630210,011200010000,Watervliet City School District,Albany County,42.7204533,-73.7084416,PK,12,4870254
+3630240,550301060000,Watkins Glen Central School District,Schuyler County,42.4107653,-76.8953868,PK,12,341224464
+3630270,600101060000,Waverly Central School District,Tioga County,42.0576532,-76.576518,PK,12,221702001
+3600011,573002040000,Wayland-Cohocton Central School District,Steuben County,42.5623054,-77.5494589,PK,12,404922375
+3630330,650801060000,Wayne Central School District,Wayne County,43.2135503,-77.3098567,PK,12,157334315
+3630360,261901060000,Webster Central School District,Monroe County,43.2130922,-77.4446649,PK,12,131964354
+3630420,050301040000,Weedsport Central School District,Cayuga County,43.0359934,-76.553511,PK,12,110445411
+3630450,200901040000,Wells Central School District,Hamilton County,43.4151782,-74.3537484,PK,12,696923843
+3630480,022601060000,Wellsville Central School District,Allegany County,42.070798,-77.9398821,PK,12,270839224
+3630540,580102030000,West Babylon Union Free School District,Suffolk County,40.7073729,-73.3597384,KG,12,14761622
+3630600,210302040000,West Canada Valley Central School District,Herkimer County,43.1582023,-74.973699,PK,12,287833444
+3630630,420101060000,West Genesee Central School District,Onondaga County,43.0577105,-76.2928356,KG,12,103604306
+3630660,280227030000,West Hempstead Union Free School District,Nassau County,40.6945678,-73.6501168,KG,12,6466653
+3615390,260803060000,West Irondequoit Central School District,Monroe County,43.2235505,-77.596919,KG,12,18115902
+3630690,580509030000,West Islip Union Free School District,Suffolk County,40.7023353,-73.2960125,PK,12,16090934
+3630780,142801060000,West Seneca Central School District,Erie County,42.8385679,-78.7527532,PK,12,60341286
+3630900,040204040000,West Valley Central School District,Cattaraugus County,42.408885,-78.625647,PK,12,165795660
+3630960,280401030000,Westbury Union Free School District,Nassau County,40.7671454,-73.5809688,PK,12,14023860
+3630990,062901040000,Westfield Central School District,Chautauqua County,42.3052395,-79.5814779,PK,12,108550771
+3631020,580902020000,Westhampton Beach Union Free School District,Suffolk County,40.7993201,-72.6505674,PK,12,41619314
+3607320,420701060000,Westhill Central School District,Onondaga County,43.0131514,-76.190986,KG,12,18049512
+3631050,412801040000,Westmoreland Central School District,Oneida County,43.1279339,-75.4402373,PK,12,110882410
+3631170,262001040000,Wheatland-Chili Central School District,Monroe County,43.0406873,-77.7526159,PK,12,92011390
+3631260,662200010000,White Plains City School District,Westchester County,41.0220205,-73.7546892,PK,12,25217993
+3631290,641701060000,Whitehall Central School District,Washington County,43.5737214,-73.4212107,PK,12,311651407
+3631320,412902060000,Whitesboro Central School District,Oneida County,43.1423447,-75.2116421,KG,12,164726035
+3631350,022101040000,Whitesville Central School District,Allegany County,42.0296487,-77.7578251,PK,12,125235793
+3631380,031401060000,Whitney Point Central School District,Broome County,42.3257749,-75.9870491,PK,12,360141450
+3618690,580232030000,William Floyd Union Free School District,Suffolk County,40.7572053,-72.8424894,PK,12,43997057
+3631440,651402040000,Williamson Central School District,Wayne County,43.2431491,-77.1829389,PK,12,89689373
+3631470,140203060000,Williamsville Central School District,Erie County,43.0185148,-78.7312255,PK,12,106207057
+3631500,151701040000,Willsboro Central School District,Essex County,44.3502299,-73.3903273,PK,12,181239401
+3631560,401501060000,Wilson Central School District,Niagara County,43.261668,-78.838965,PK,12,175687091
+3631590,191401040000,Windham-Ashland-Jewett Central School District,Greene County,42.3015996,-74.2561782,PK,12,249073200
+3602730,031701060000,Windsor Central School District,Broome County,42.0714033,-75.673439,PK,12,303899164
+3631740,472506040000,Worcester Central School District,Otsego County,42.6108421,-74.7177484,PK,12,157798437
+3631800,580109020000,Wyandanch Union Free School District,Suffolk County,40.746555,-73.3709679,PK,12,8581061
+3631830,490804020000,Wynantskill Union Free School District,Rensselaer County,42.6916946,-73.6331497,PK,12,7732135
+3631860,671002040000,Wyoming Central School District,Wyoming County,42.8246783,-78.1179882,KG,12,122266736
+3631920,662300010000,Yonkers City School District,Westchester County,40.946603,-73.8673566,PK,12,46634436
+3631950,241701040000,York Central School District,Livingston County,42.8366905,-77.8879671,PK,12,174016047
+3608970,043501060000,Yorkshire-Pioneer Central School District,Cattaraugus County,42.5364414,-78.4238381,PK,12,589140397
+3631980,662402060000,Yorktown Central School District,Westchester County,41.2632663,-73.8037016,KG,12,69949079

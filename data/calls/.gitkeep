@@ -1,0 +1,3 @@
+Keeps this directory in git. track.py writes calls_{season}.csv here.
+Git does not track empty directories, and the tracking workflow's
+"git add data/calls" fails outright if the directory is missing.

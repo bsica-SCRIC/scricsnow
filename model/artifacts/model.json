@@ -1,0 +1,69 @@
+{
+  "version": 2,
+  "trained_at": "2026-08-28T19:47:59+00:00",
+  "fit_on": "all seasons, holdout included",
+  "shape": "two independent binary logits over shared features, clamped for ordering; not proportional-odds ordinal",
+  "features": [
+    "snow_sqrt",
+    "temp_min_c",
+    "elev_m",
+    "closures_used",
+    "closed_prev",
+    "closed_prev_snow",
+    "days_from_peak"
+  ],
+  "impute": {
+    "snow_sqrt": 0.0,
+    "temp_min_c": -3.3,
+    "elev_m": 433.945435,
+    "closures_used": 1.0,
+    "closed_prev": 0.0,
+    "closed_prev_snow": 0.0,
+    "days_from_peak": 53.0
+  },
+  "scaler": {
+    "mean": [
+      1.104245,
+      -3.62268,
+      447.824496,
+      1.480345,
+      0.052046,
+      0.139113,
+      54.64577
+    ],
+    "scale": [
+      2.468917,
+      6.064753,
+      115.949383,
+      1.618333,
+      0.22212,
+      1.030701,
+      33.635467
+    ]
+  },
+  "rows": 27245,
+  "disrupted": {
+    "coef": [
+      1.225211,
+      0.264946,
+      0.009214,
+      0.007676,
+      0.296129,
+      -0.272001,
+      -0.862544
+    ],
+    "intercept": -4.781387
+  },
+  "closed": {
+    "coef": [
+      1.21109,
+      0.207158,
+      -0.033103,
+      -0.071984,
+      0.336265,
+      -0.301316,
+      -0.736619
+    ],
+    "intercept": -5.06491
+  }
+}

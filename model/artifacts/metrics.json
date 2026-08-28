@@ -1,0 +1,353 @@
+{
+  "trained_at": "2026-08-28T19:47:59+00:00",
+  "rows": 27245,
+  "features": [
+    "snow_sqrt",
+    "temp_min_c",
+    "elev_m",
+    "closures_used",
+    "closed_prev",
+    "closed_prev_snow",
+    "days_from_peak"
+  ],
+  "seasons": [
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "holdout_seasons": [
+    2024,
+    2025
+  ],
+  "shape": "two independent binary logits over shared features, clamped for ordering; not proportional-odds ordinal",
+  "shipped_model_fit_on": "all seasons, holdout included",
+  "validation": "GroupKFold by season, plus two fully held-out seasons. A storm spans ~40 districts, so a random split leaks the same weather into train and test.",
+  "caveats": [
+    "Optimistic bound, not an estimate of tomorrow. GHCN SNOW[D] for midnight-convention stations includes snow that fell after the morning call, and no observation-time metadata exists to strip it. The scorecard, which scores frozen forecasts against observed mornings, is the number with no look-ahead in it.",
+    "Trained on observed snowfall, served forecast snowfall. Six inches measured is not six inches predicted. Recalibrate against forecasts directly once a full season of paired data exists."
+  ],
+  "training_set": {
+    "district_seasons": 268,
+    "rows": 27245,
+    "dropped_no_weather": 1755,
+    "open": 26340,
+    "delay": 209,
+    "closed": 696,
+    "positive_rate": 0.0332,
+    "seasons": "2011-2025",
+    "dropped_as_reserve_or_nonweather": 124,
+    "dropped_closures": 79,
+    "dropped_delays": 45,
+    "label_filter_note": "positives dropped by trust_labels; the filter shares four of five thresholds with model features, so metrics are optimistic by an unmeasured amount bounded by this count"
+  },
+  "cross_validated": {
+    "closed": {
+      "model": {
+        "auc": 0.9283,
+        "pr_auc": 0.4125,
+        "brier": 0.02013,
+        "positives": 440
+      },
+      "heuristic": {
+        "auc": 0.8666,
+        "pr_auc": 0.3967,
+        "brier": 0.0211,
+        "positives": 440
+      },
+      "reliability": [
+        {
+          "band": "-0.00-0.02",
+          "mornings": 13238,
+          "storms": 1284,
+          "we_said": 0.5,
+          "actually_closed": 0.4,
+          "closures": 59
+        },
+        {
+          "band": "0.02-0.05",
+          "mornings": 1086,
+          "storms": 308,
+          "we_said": 3.2,
+          "actually_closed": 3.8,
+          "closures": 41
+        },
+        {
+          "band": "0.05-0.10",
+          "mornings": 654,
+          "storms": 226,
+          "we_said": 7.1,
+          "actually_closed": 7.6,
+          "closures": 50
+        },
+        {
+          "band": "0.10-0.20",
+          "mornings": 413,
+          "storms": 145,
+          "we_said": 14.0,
+          "actually_closed": 15.0,
+          "closures": 62
+        },
+        {
+          "band": "0.20-0.40",
+          "mornings": 327,
+          "storms": 95,
+          "we_said": 28.0,
+          "actually_closed": 26.3,
+          "closures": 86
+        },
+        {
+          "band": "0.40-0.70",
+          "mornings": 182,
+          "storms": 47,
+          "we_said": 52.3,
+          "actually_closed": 43.4,
+          "closures": 79
+        },
+        {
+          "band": "0.70-1.00",
+          "mornings": 84,
+          "storms": 26,
+          "we_said": 83.8,
+          "actually_closed": 75.0,
+          "closures": 63
+        }
+      ],
+      "calibration_error_pts": 0.35,
+      "worst_band_gap_pts": 8.9
+    },
+    "disrupted": {
+      "model": {
+        "auc": 0.9357,
+        "pr_auc": 0.4941,
+        "brier": 0.02381,
+        "positives": 565
+      },
+      "heuristic": {
+        "auc": 0.875,
+        "pr_auc": 0.4663,
+        "brier": 0.02524,
+        "positives": 565
+      },
+      "reliability": [
+        {
+          "band": "-0.00-0.02",
+          "mornings": 12810,
+          "storms": 1265,
+          "we_said": 0.5,
+          "actually_closed": 0.5,
+          "closures": 60
+        },
+        {
+          "band": "0.02-0.05",
+          "mornings": 1239,
+          "storms": 323,
+          "we_said": 3.2,
+          "actually_closed": 4.2,
+          "closures": 52
+        },
+        {
+          "band": "0.05-0.10",
+          "mornings": 697,
+          "storms": 243,
+          "we_said": 7.2,
+          "actually_closed": 7.3,
+          "closures": 51
+        },
+        {
+          "band": "0.10-0.20",
+          "mornings": 473,
+          "storms": 162,
+          "we_said": 14.3,
+          "actually_closed": 15.2,
+          "closures": 72
+        },
+        {
+          "band": "0.20-0.40",
+          "mornings": 369,
+          "storms": 112,
+          "we_said": 28.9,
+          "actually_closed": 28.7,
+          "closures": 106
+        },
+        {
+          "band": "0.40-0.70",
+          "mornings": 260,
+          "storms": 68,
+          "we_said": 53.7,
+          "actually_closed": 45.4,
+          "closures": 118
+        },
+        {
+          "band": "0.70-1.00",
+          "mornings": 136,
+          "storms": 39,
+          "we_said": 84.8,
+          "actually_closed": 77.9,
+          "closures": 106
+        }
+      ],
+      "calibration_error_pts": 0.31,
+      "worst_band_gap_pts": 8.3
+    }
+  },
+  "holdout": {
+    "closed": {
+      "model": {
+        "auc": 0.9023,
+        "pr_auc": 0.4264,
+        "brier": 0.01609,
+        "positives": 256
+      },
+      "heuristic": {
+        "auc": 0.8678,
+        "pr_auc": 0.3881,
+        "brier": 0.01676,
+        "positives": 256
+      },
+      "reliability": [
+        {
+          "band": "-0.00-0.02",
+          "mornings": 9240,
+          "storms": 264,
+          "we_said": 0.4,
+          "actually_closed": 0.5,
+          "closures": 45
+        },
+        {
+          "band": "0.02-0.05",
+          "mornings": 926,
+          "storms": 116,
+          "we_said": 3.2,
+          "actually_closed": 5.7,
+          "closures": 53
+        },
+        {
+          "band": "0.05-0.10",
+          "mornings": 531,
+          "storms": 80,
+          "we_said": 7.1,
+          "actually_closed": 5.8,
+          "closures": 31
+        },
+        {
+          "band": "0.10-0.20",
+          "mornings": 354,
+          "storms": 50,
+          "we_said": 13.8,
+          "actually_closed": 9.0,
+          "closures": 32
+        },
+        {
+          "band": "0.20-0.40",
+          "mornings": 124,
+          "storms": 31,
+          "we_said": 26.5,
+          "actually_closed": 19.4,
+          "closures": 24
+        },
+        {
+          "band": "0.40-0.70",
+          "mornings": 30,
+          "storms": 10,
+          "we_said": 50.2,
+          "actually_closed": 53.3,
+          "closures": 16
+        },
+        {
+          "band": "0.70-1.00",
+          "mornings": 56,
+          "storms": 2,
+          "we_said": 89.8,
+          "actually_closed": 98.2,
+          "closures": 55
+        }
+      ],
+      "calibration_error_pts": 0.63,
+      "worst_band_gap_pts": 8.4
+    },
+    "disrupted": {
+      "model": {
+        "auc": 0.8902,
+        "pr_auc": 0.3934,
+        "brier": 0.0225,
+        "positives": 340
+      },
+      "heuristic": {
+        "auc": 0.8433,
+        "pr_auc": 0.347,
+        "brier": 0.02402,
+        "positives": 340
+      },
+      "reliability": [
+        {
+          "band": "-0.00-0.02",
+          "mornings": 9008,
+          "storms": 263,
+          "we_said": 0.5,
+          "actually_closed": 0.8,
+          "closures": 71
+        },
+        {
+          "band": "0.02-0.05",
+          "mornings": 935,
+          "storms": 124,
+          "we_said": 3.2,
+          "actually_closed": 3.7,
+          "closures": 35
+        },
+        {
+          "band": "0.05-0.10",
+          "mornings": 571,
+          "storms": 83,
+          "we_said": 7.2,
+          "actually_closed": 10.0,
+          "closures": 57
+        },
+        {
+          "band": "0.10-0.20",
+          "mornings": 410,
+          "storms": 62,
+          "we_said": 14.3,
+          "actually_closed": 13.7,
+          "closures": 56
+        },
+        {
+          "band": "0.20-0.40",
+          "mornings": 215,
+          "storms": 39,
+          "we_said": 27.2,
+          "actually_closed": 14.4,
+          "closures": 31
+        },
+        {
+          "band": "0.40-0.70",
+          "mornings": 60,
+          "storms": 19,
+          "we_said": 50.7,
+          "actually_closed": 55.0,
+          "closures": 33
+        },
+        {
+          "band": "0.70-1.00",
+          "mornings": 62,
+          "storms": 5,
+          "we_said": 91.9,
+          "actually_closed": 91.9,
+          "closures": 57
+        }
+      ],
+      "calibration_error_pts": 0.71,
+      "worst_band_gap_pts": 12.8
+    }
+  }
+}

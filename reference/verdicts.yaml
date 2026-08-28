@@ -1,0 +1,128 @@
+# What the page says instead of just a percentage.
+#
+# Edit freely. Add lines, remove lines, change the emoji. The app picks one at
+# random from whichever band the probability falls in, so more lines means more
+# variety and a better reason to hit refresh.
+#
+# Rules:
+#   - bands must be listed low to high; `max` is the top of the band
+#   - the last band must have max: 1.0 so nothing falls off the end
+#   - `emoji` may be one emoji or a list to pick from
+#   - keep lines short. They render large on a phone.
+#   - avoid anything that sounds like advice. This page is entertainment and
+#     must never read as permission to skip school.
+
+bands:
+  - name: no chance
+    max: 0.03
+    emoji: ["📚", "✏️", "🎒"]
+    messages:
+      - "Go to bed. School is on."
+      - "Not a flake in sight."
+      - "Set your alarm. Sorry."
+      - "The buses are running."
+      - "Do your homework. All of it."
+      - "Nothing doing tonight."
+
+  - name: slim
+    max: 0.10
+    emoji: ["✏️", "🌤️", "🤔"]
+    messages:
+      - "Probably school. Pack the bag."
+      - "A flurry or two, nothing more."
+      - "Do not get your hopes up."
+      - "Long shot. Very long."
+      - "Stranger things have happened. Not this though."
+
+  - name: maybe
+    max: 0.25
+    emoji: ["🤞", "👀", "❄️"]
+    messages:
+      - "There is a chance. A small one."
+      - "Worth checking again later."
+      - "Keep an eye on the sky."
+      - "Something is brewing out there."
+      - "Do homework anyway. Just in case."
+
+  - name: real chance
+    max: 0.50
+    emoji: ["👀", "❄️", "😬"]
+    messages:
+      - "This could genuinely happen!"
+      - "Coin flip."
+      - "Now it is interesting."
+      - "The superintendent is watching the radar."
+      - "Sleep with one eye on the window."
+
+  - name: likely
+    max: 0.75
+    emoji: ["⛄", "🌨️", "🎉"]
+    messages:
+      - "Looking good for a snow day!"
+      - "Leave the boots by the door."
+      - "The odds are on your side."
+      - "Somebody is getting up early to make that call."
+      - "Hot chocolate weather incoming."
+
+  - name: near certain
+    max: 1.0
+    emoji: ["🛷", "⛄", "🎉", "🥳"]
+    messages:
+      - "Get the sled ready."
+      - "This one looks like a snow day."
+      - "Find the good gloves tonight."
+      - "Big storm. Big odds."
+      - "Charge the tablet. You will have time."
+      - "Somebody is building a snowman tomorrow."
+
+# Shown when the district has already announced, so no prediction is needed.
+announced:
+  closed:
+    emoji: ["🎉", "🥳", "🛷"]
+    messages:
+      - "IT IS OFFICIAL. Enjoy it."
+      - "Called it. School is closed."
+      - "Confirmed. Go back to sleep."
+  delay:
+    emoji: ["🕐", "😴"]
+    messages:
+      - "Delayed start. Extra sleep."
+      - "A late start beats no sleep."
+  early:
+    emoji: ["🏃", "🌨️"]
+    messages:
+      - "Out early today."
+  remote:
+    emoji: ["💻"]
+    messages:
+      - "Remote day. Not quite a snow day."
+
+# Shown when the forecast cannot be reached at all.
+unavailable:
+  emoji: ["🌫️"]
+  messages:
+    - "Cannot see the sky right now. Try again shortly."
+
+# Shown when there is no school on the day in question anyway, so a percentage
+# would be meaningless. The reason (weekend, break, holiday) and the next school
+# day are added by the page; these are the opening line.
+no_school:
+  emoji: ["🎒", "😴", "🛌", "📅"]
+  messages:
+    - "No school tomorrow anyway."
+    - "Nothing to predict. School is already out."
+    - "Enjoy it. No school either way."
+    - "Sleep in regardless."
+    - "The buses are parked."
+    - "I predict there is no school tomorrow. I am correct."
+
+# Shown when the next school day is further out than the night before. We only
+# call it one night ahead, and saying so is more honest than serving a number
+# the model was never built for.
+too_far:
+  emoji: ["🔭", "📚", "🤷"]
+  messages:
+    - "We only call it the night before. Check back then."
+    - "Too far out for us. Ask your science teacher."
+    - "One night ahead is all we do. Come back the evening before."
+    - "That is a question for your science teacher, not us."

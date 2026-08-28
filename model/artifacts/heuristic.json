@@ -1,0 +1,13 @@
+{
+  "trained_at": "2026-08-28T19:47:59+00:00",
+  "rows": 27245,
+  "fit_on": "all seasons, holdout included",
+  "closed": {
+    "slope": 0.854,
+    "intercept": -1.5371
+  },
+  "disrupted": {
+    "slope": 0.9272,
+    "intercept": -1.0101
+  }
+}

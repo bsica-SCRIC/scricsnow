@@ -1,0 +1,20 @@
+# Nightly forecast job and the closings feed need only these two.
+pandas>=2.0
+requests>=2.31
+
+# Scoring arithmetic in model/predict.py, features.py, heuristic.py and
+# scorecard.py. pandas pulls it in anyway, but serving depends on it directly,
+# so it is named rather than left to a transitive install.
+numpy>=1.24
+
+# The Streamlit app. PyYAML is for reference/verdicts.yaml, which app/verdicts.py
+# loads; nothing else pulls it in, so it has to be named here.
+streamlit>=1.30
+PyYAML>=6.0
+
+# scikit-learn is deliberately NOT here. The only thing that wanted it was
+# heuristic.calibrate(), which is refitting-only, has no caller in this repo,
+# and imports sklearn lazily inside the function body. Fitting lives in the
+# private training repo and installs it there. Serving applies the stored
+# coefficients with numpy alone, so naming it here would cost every Streamlit
+# build a large install for a code path that never runs.
