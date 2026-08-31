@@ -10,14 +10,13 @@ Schoharie and Tioga counties, from the Susquehanna valley up into the Catskills.
 ## What it does
 
 Every evening at 8pm, the site pulls a National Weather Service forecast for
-each district's own patch of ground and posts two numbers for the next school
-morning: the chance of a **full closure**, and the chance of **a delay or
-worse**.
+each district and posts two numbers for the next school morning:
+the chance of a **full closure**, and the chance of **a delay or more**.
 
-Then it freezes the 8pm number. It does not move again, and it is the one the
-site's accuracy record is measured against. A second number keeps updating
-through the night as the forecast changes, so you can watch it climb while it
-snows outside. Both are on the page and both are labelled.
+Then it locks that 8pm number. A second number will update
+through the night as the forecast changes. You can watch it climb while it
+snows outside. Right now it will update once an hour so you can doom refresh
+with your one white sock on and putting a spoon in the freeer.
 
 If a district actually announces, the announcement replaces the prediction. A
 percentage sitting next to a district that has already said "closed" is worse
@@ -26,14 +25,13 @@ than showing nothing at all.
 ```mermaid
 flowchart LR
     W["Tonight's weather forecast<br/>for your district"] --> P
-    H["Your district's own history<br/>elevation, past snow days"] --> P
-    P["The prediction"] --> N["Two numbers, posted at 8pm<br/>then frozen"]
+    H["Your district's history<br/>elevation, past snow days"] --> P
+    P["The prediction"] --> N["TPrediction is made at 8pm<br>We will track changes against what we predicted"]
     N --> M["In the morning:<br/>did the district close?"]
     M --> S["Scorecard<br/>how often we were right"]
 ```
 
-The accuracy record is right on the page instead of buried, because a prediction
-tool that never shows its receipts is asking to be believed on trust.
+The accuracy record at the bottom of the page.
 
 ## Why one district gets a higher number than another
 
@@ -42,19 +40,17 @@ things drive most of the difference.
 
 **Snow, obviously.** It is by far the biggest factor. But it does not work in a
 straight line. Going from a clear road to three inches is most of the decision.
-Going from twelve inches to fifteen barely matters, because by then the answer
-was already yes.
+Going from twelve inches to fifteen barely matters.
 
 **Where the district sits.** Higher districts close *less* often for the same
-snow, which surprises most people. They have more plows for the roads they have
-to clear, and a community that expects snow and is set up for it.
+snow, which surprises some people. A community that expects snow and is set up for it.
 
 **Whether the district just used a snow day.** This is the strongest non-weather
-factor in the whole thing. A district that closed two days ago is much less
-likely to close again under the same storm, because snow days are a limited
-supply and everyone knows it. Under six inches of snow, districts that had not
-closed recently shut about 87% of the time. Districts that had closed in the
-last three days shut about 32% of the time. Same snow.
+factor. A district that closed two days ago is much less likely to close again 
+under the same storm, because snow days are a limited supply and everyone knows it.
+Under six inches of snow, districts that had not closed recently shut about 87% of 
+the time. Districts that had closed in the last three days shut about 32% of the 
+time. Same snow.
 
 There is one twist: on a *quiet* morning, having closed recently makes a closure
 slightly more likely, not less, because it usually means the district is in a
@@ -63,8 +59,8 @@ rough stretch with snow still on the ground.
 ## How well it does
 
 The predictions were tested against thirteen past winters, roughly 27,000 school
-mornings. Two of those winters were held back completely and used only at the
-end, so the model was graded on storms it had never seen.
+mornings. Two of those winters were held back and used only at the
+end to test, so the model was graded on storms it had never seen.
 
 Here is how the numbers line up with what actually happened:
 
@@ -78,7 +74,7 @@ Here is how the numbers line up with what actually happened:
 | 5 to 8 inches | 58% | 58% |
 | over 8 inches | 83% | 85% |
 
-Close, but not magic. In the 70%-and-up range it is a little overconfident: when
+In the 70%-and-up range it is a little overconfident: when
 it says 84%, districts close about 75% of the time. Treat a high number as
 "probably" and not as "definitely".
 
@@ -89,22 +85,21 @@ whether these predictions beat that.
 
 ## What it cannot do
 
-**It does not know when the snow will stop.** Nine inches that ended at 10pm and
-nine inches still falling at 8am are very different mornings, and only one of
-them closes school. The site's second score, the hand-built one, does account
-for this, which is why both numbers are shown.
+**It does not know when the snow will stop.** This model does not predict
+the weather. It predicts how the school will act bast on past performance.
 
 **It is only as good as the forecast.** If the Weather Service expects six
 inches and two show up, the prediction was wrong for a reason that has nothing
 to do with the math.
 
-**It knows nothing about your superintendent.** No local knowledge, no sense of
-who is cautious and who is not, and no idea what the district next door is
-doing, even though in real life superintendents talk to each other.
+**It knows nothing about your superintendent.** For the frist year of this
+program, all SCRIC districts were combined, so the model is trained on the
+entire region, not a specific superintendent. If you are a superindentent
+reading this, and want us to train on your data, please reach out.
 
-**It only calls the next school day.** On a Friday night it will name Monday,
-but it will not put a number on it. Predicting three days out is a different
-problem and it would be dishonest to score it the same way.
+**It only calls the next school day.** On a Friday night it will know Monday,
+but it will not predict it. Predicting three days out is a different
+problem. Check with your science department about meterology. 
 
 ## Where the numbers come from
 
@@ -114,9 +109,8 @@ education statistics agency, district boundaries from the Census Bureau, ground
 elevation from the US Geological Survey, and live closing announcements from the
 WBNG feed.
 
-No personal information of any kind is collected, used or published. Nothing
-here is about any student, family, or staff member. It is weather, terrain, and
-public records of which days schools were closed.
+No personal information of any kind is collected, used or published. It is weather,
+terrain, and public records of which days schools were closed.
 
 Each district gets its own blend of the nearest snow-reporting stations rather
 than one regional airport, which matters more than it sounds like it should.
@@ -127,9 +121,8 @@ airport has nothing useful to say about Hunter-Tannersville, 90 miles away and
 ## More detail
 
 [`model/MODEL-CARD.md`](model/MODEL-CARD.md) is the technical version: exactly
-what the model looks at, how it was trained and tested, the full accuracy
-tables, and an honest list of its weak spots. Written for someone who wants to
-check the work rather than take it on faith.
+what the model looks at, how it was trained and tested. Written for someone who
+wants to check the work.
 
 ## Running it yourself
 
@@ -139,6 +132,9 @@ python -m venv .venv
 pip install -r requirements.txt
 streamlit run app\snowday.py
 ```
+
+Why would you want to run this yourself? I don't know. If you use it anywhere
+other than the South Central RIC region, you would need your own training model.
 
 | Path | What lives there |
 |---|---|
