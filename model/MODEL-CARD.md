@@ -1,40 +1,36 @@
 # Model card: scricsnow
 
-The model behind the snow day predictor. What it is, what it eats, how well it
-does, and where it stops being trustworthy. The numbers come from
-`model/artifacts/metrics.json`, which the training run writes; if that file and
-this one ever disagree, that file is right.
+The model behind the snow day predictor. What it is, what it eats, and how well it
+does. The numbers come from `model/artifacts/metrics.json`.
+ if that file and this one ever disagree, that file is right.
 
 ## What it does
 
-Given a National Weather Service forecast for one school district's own patch of
-ground, it puts out two probabilities for the next school morning:
+Given a National Weather Service forecast for one school district,
+it puts out two probabilities for the next school morning:
 
 - **closed** - a full closure
 - **delayed or worse** - a delay, a closure, or a remote day
 
-Two binary logistic regressions over one shared seven-column feature matrix, one
+Two binary logistic regressions over one shared seven feature matrix, one
 per outcome, clamped afterwards so a closure can never come out likelier than
-the disruption that contains it. Fitted in scikit-learn, served as plain
-arithmetic in numpy. No neural network, no gradient boosting, no GPU. Fitting
-takes about two seconds.
+the disruption that contains it. It uses scikit-learn, and numpy.
 
-A hand-built heuristic scores the same forecast alongside it, and both numbers
+A hand-built heuristic scores the same forecast alongside it, both numbers
 are published. They are not an ensemble and are never averaged. The heuristic
 exists because it can see four things the fitted model cannot, since the
 historical record has no column for any of them: what hour the snow stops,
 whether it is still falling at nine, the wind, and the depth already on the
-ground.
+ground. We hope to capture hourly data this year for next year improcment.
 
 **Intended use:** curiosity and entertainment for families in New York's
-Southern Tier. It is not advice, not a reason to keep a child home, and no
+Southern Tier. This is not advice, not a reason to keep a child home, and no
 district uses it to decide anything.
 
 ## Inputs
 
-Seven columns. The order is load-bearing: coefficients are stored positionally,
-and `predict.load()` refuses to serve an artifact whose feature list disagrees
-with `features.py`.
+Seven columns. Coefficients are stored positionally, and `predict.load()` 
+refuses to serve an artifact whose feature list disagrees with `features.py`.
 
 | # | Feature | Unit | Meaning |
 |---|---|---|---|
@@ -49,7 +45,7 @@ with `features.py`.
 Standardised coefficients, closure head: `snow_sqrt` +1.211, `days_from_peak`
 -0.737, `closed_prev` +0.336, `closed_prev_snow` -0.301, `temp_min_c` +0.207,
 `closures_used` -0.072, `elev_m` -0.033, intercept -5.065. The delay-or-worse
-head has the same shape. Snowfall is the spine, seasonality is the only other
+head has the same shape. Snowfall is the focus, seasonality is the only other
 large term, and everything else is a modifier, which is what you want from a
 snow day model.
 
@@ -103,25 +99,13 @@ than having no term at all.
 
 ## Training data
 
-27,245 district-mornings across thirteen seasons, 2011 to 2025, for 50 districts
+27,245 district-mornings across thirteen seasons, 2011 to 2025, for ~50 districts
 in Broome, Chenango, Delaware, Greene, Otsego, Schoharie and Tioga counties. 696
 closures, 209 delays, positive rate 3.32%. Weather from NOAA GHCN daily, blended
 per district across its nearest snow-reporting stations and weighted by distance.
 
-2019 and 2020 are excluded on purpose: closing school meant something different
+2019 and 2020 are excluded on purpose. Closing school meant something different
 during COVID and those seasons would teach the wrong lesson.
-
-Two details shape everything else. **Open days are constructed, not read:** the
-source calendar holds exception days only, so ordinary open mornings are built
-from the school-year grid minus the recorded exceptions. And **a silent station
-is not zero snow:** co-op observers skip days, and blending a non-report as 0 mm
-would dilute a real storm toward calm, which is the dangerous direction to be
-wrong in.
-
-Closure labels are believed only if the weather backs them up. That removes real
-errors, such as unused reserve days parked at the end of the calendar and the
-eleven districts that closed for the 2024 solar eclipse under a clear April sky.
-Failing labels are dropped, never flipped to open.
 
 ## How well it does
 
@@ -194,9 +178,6 @@ Ranked by how much they should affect your confidence.
    recently", which is exactly the wrong default on day two of a storm.
 6. **Nothing in it knows about the district next door.** Peer behaviour is used
    only to decide whether to believe a training label, never as a feature.
-7. **Two districts, Afton and Johnson City, have no history behind them.** They
-   get full predictions, from weather and terrain, but contribute nothing to
-   fitting.
 8. **One lead time only.** Fitted and measured at roughly a twelve-hour lead, so
    the site names the next school day and declines to put a number further out.
 9. **The shipped artifact is fitted on all thirteen seasons**, including the two
