@@ -394,7 +394,7 @@ if predictable:
 # --- the region -------------------------------------------------------------
 polys = load_shapes()
 if len(polys):
-    st.markdown("### Our District's")
+    st.markdown("### Our Districts")
     colours = MAP_COLOURS[theme]
     closed_ids = (set(closings.loc[closings["leaid"].notna(), "leaid"])
                   if len(closings) else set())

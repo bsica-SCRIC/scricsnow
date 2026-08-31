@@ -26,7 +26,7 @@ than showing nothing at all.
 flowchart LR
     W["Tonight's weather forecast<br/>for your district"] --> P
     H["Your district's history<br/>elevation, past snow days"] --> P
-    P["The prediction"] --> N["TPrediction is made at 8pm<br>We will track changes against what we predicted"]
+    P["The prediction"] --> N["Prediction is made at 8pm<br>We will track changes against what we predicted"]
     N --> M["In the morning:<br/>did the district close?"]
     M --> S["Scorecard<br/>how often we were right"]
 ```
