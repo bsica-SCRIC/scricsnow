@@ -271,7 +271,6 @@ with st.sidebar:
     # 6am, and a white screen at that hour is unpleasant. Light mode stays
     # available and has to keep working, because people do check at 4pm.
     theme = "dark" if st.toggle("Night mode", value=True) else "light"
-    st.caption("For fun only. Your district decides, not this page.")
 
 # The stylesheet has to sit at the top of the page but cannot be written until
 # we know whether snow is forecast, since that decides the falling flakes. A
@@ -279,6 +278,10 @@ with st.sidebar:
 style_slot = st.empty()
 
 st.markdown("# ❄️ Snow Day Predictor")
+st.caption("This app uses machine learning to predict when the school districts"
+            "in the South Central Reginoal Information Center (SCRIC)"
+            "will close for snow tomorrow morning. This is not an official source;"
+            "check your district or the news to hear officially.")
 
 # The district picker lives HERE, in the main column, not in the sidebar. On a
 # phone the sidebar collapses behind a hamburger, and this is the single
@@ -372,7 +375,7 @@ else:
                f"&nbsp;{arrow} since then</p>")
     else:
         sub = ('<p class="muted">The 8pm Call has not been made yet tonight. '
-               "This number moves until then.</p>")
+               "This number changes until then.</p>")
 
     card(f'<div class="big">{pct:.0f}%</div>'
          f'<div class="verdict">{emoji} {msg}</div>'
@@ -448,12 +451,12 @@ if len(polys):
 hist = TRACK.load_history(target_iso)
 mine_hist = hist[hist["leaid"] == row["leaid"]] if len(hist) else pd.DataFrame()
 if len(mine_hist) > 1:
-    st.markdown("### How the number moved tonight")
+    st.markdown("### How we did tonight")
     line = mine_hist.set_index("captured_at")[["p_closed"]] * 100
     line.columns = ["chance %"]
     st.line_chart(line, height=220)
-    st.caption("Every point is a fresh forecast. The 8pm Call is the one we "
-               "are scored on.")
+    st.caption("Every point is a new forecast. The 8pm Call is the one we "
+               "score ourselves on.")
 
 # --- snow day bank ----------------------------------------------------------
 bank = load_bank()
@@ -490,7 +493,7 @@ if summary.get("district_mornings", 0) > 0:
     card(body)
 else:
     card("<h3>How accurate have we been?</h3>"
-         '<p class="muted">The scoreboard starts once it snows at 8pm '
+         '<p class="muted">The scoreboard starts at 8pm EST, once it snows.'
          "Call gets recorded here.</p>")
 
 st.markdown(
