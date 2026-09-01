@@ -490,8 +490,8 @@ if summary.get("district_mornings", 0) > 0:
     card(body)
 else:
     card("<h3>How accurate have we been?</h3>"
-         '<p class="muted">The scoreboard starts once it snows. Every 8pm '
-         "Call gets recorded here, hits and misses both.</p>")
+         '<p class="muted">The scoreboard starts once it snows at 8pm '
+         "Call gets recorded here.</p>")
 
 st.markdown(
     '<p class="muted" style="text-align:center;margin-top:2rem">'
