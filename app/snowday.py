@@ -278,9 +278,9 @@ with st.sidebar:
 style_slot = st.empty()
 
 st.markdown("# ❄️ Snow Day Predictor")
-st.caption("This app uses machine learning to predict when the school districts"
-            "in the South Central Reginoal Information Center (SCRIC)"
-            "will close for snow tomorrow morning. This is not an official source;"
+st.caption("This app uses machine learning to predict when the school districts "
+            "in the South Central Reginoal Information Center (SCRIC) "
+            "will close for snow tomorrow morning. This is not an official source; "
             "check your district or the news to hear officially.")
 
 # The district picker lives HERE, in the main column, not in the sidebar. On a
