@@ -22,12 +22,14 @@ Design notes, since several choices here are deliberate rather than decorative:
     its receipts is asking to be believed on trust.
 """
 
+import json
 import os
 import sys
 from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 sys.path.insert(0, os.path.dirname(__file__))
@@ -144,6 +146,25 @@ def style(theme, snowing):
 
 def card(html):
     st.markdown(f'<div class="card">{html}</div>', unsafe_allow_html=True)
+
+
+def script_frame(html):
+    """A zero-height frame whose script can reach the real page.
+
+    st.markdown and st.html both drop <script>, by design. A component frame is
+    the only place Streamlit will run one, and it is same-origin, so it can see
+    the parent's storage and address bar.
+
+    st.iframe is the current name; st.components.v1.html is the same thing under
+    the old one and is on its way out. Preferring the new name keeps the console
+    clean without raising the streamlit floor in requirements.txt.
+    """
+    # One pixel, not zero: st.iframe rejects a height of 0 outright, and the
+    # frame only has to exist, not be seen.
+    if hasattr(st, "iframe"):
+        st.iframe(html, height=1)
+    else:
+        components.html(html, height=1)
 
 
 # --------------------------------------------------------------------------
@@ -288,10 +309,83 @@ st.caption("This app uses machine learning to predict when the school districts 
 # control the entire page exists to serve. Buried there, most readers would
 # take Binghamton's number for their own.
 names = roster["district"].tolist()
-default = next((i for i, n in enumerate(names) if "Binghamton City" in n), 0)
+
+# REMEMBERING THE PICK. Binghamton is only the default because something has to
+# be, and a parent in Windsor should not have to find their district again every
+# night. Two layers, because neither is sufficient alone:
+#
+#   * The query string (?d=<leaid>) is the only part of this that Python can
+#     read. It survives a refresh, it makes a bookmark carry the right district,
+#     and it makes the link shareable, which is how one parent tells another.
+#     leaid rather than the name, because districts get renamed and the federal
+#     id does not.
+#
+#   * localStorage is what makes a bare visit to the plain URL work, which is
+#     how most people actually arrive. Streamlit cannot read it from Python, so
+#     a script mirrors the query string into it and, on a visit with no query
+#     string at all, puts the saved district back and reloads once.
+#
+# Nothing is stored server-side. The choice lives in that reader's browser, so
+# there is no district-to-person record here to keep or to leak.
+DISTRICT_PARAM = "d"
+
+incoming = st.query_params.get(DISTRICT_PARAM)
+seed = roster[roster["leaid"] == incoming] if incoming else roster.iloc[0:0]
+if len(seed) and seed["district"].iloc[0] in names:
+    default = names.index(seed["district"].iloc[0])
+else:
+    default = next((i for i, n in enumerate(names) if "Binghamton City" in n), 0)
+
+
+def remember_district():
+    """Put the new pick in the URL, so a refresh keeps it."""
+    hit = roster.loc[roster["district"] == st.session_state["district_pick"],
+                     "leaid"]
+    if len(hit):
+        st.query_params[DISTRICT_PARAM] = hit.iloc[0]
+
+
 chosen = st.selectbox("Your school district", names, index=default,
+                      key="district_pick", on_change=remember_district,
                       label_visibility="collapsed")
 row = roster[roster["district"] == chosen].iloc[0]
+
+# The mirror, in a zero-height component frame. The frame is same-origin, so it
+# can reach the real page's storage and address bar.
+#
+# The query string is read again HERE, after the widget, because on_change has
+# by then written this run's pick into it. Read before the widget, a first-ever
+# visitor's very first choice would look like no choice at all and never get
+# saved.
+#
+# Only a deliberate pick is stored: with no query string the script restores and
+# does not write, so nobody who simply opened the page gets Binghamton recorded
+# in their browser as though they had asked for it. The reload needs both an
+# absent query string and a saved value, so it happens at most once per visit
+# and cannot loop.
+_settled = st.query_params.get(DISTRICT_PARAM)
+script_frame(f"""
+<script>
+(function () {{
+  try {{
+    var KEY = "snowday.leaid";
+    var store = window.parent.localStorage;
+    if ({json.dumps(_settled is None)}) {{
+      var saved = store.getItem(KEY);
+      if (saved) {{
+        var url = new URL(window.parent.location.href);
+        url.searchParams.set({json.dumps(DISTRICT_PARAM)}, saved);
+        window.parent.location.replace(url.toString());
+      }}
+    }} else {{
+      store.setItem(KEY, {json.dumps(str(row["leaid"]))});
+    }}
+  }} catch (e) {{
+    /* Private mode, or storage switched off. The default still works. */
+  }}
+}})();
+</script>
+""")
 
 now = datetime.now(nws.LOCAL_TZ)
 calendar = load_calendar()
