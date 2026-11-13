@@ -26,6 +26,7 @@ import pandas as pd
 
 import features as F
 import heuristic as H
+import outcomes as O
 
 ARTIFACT = os.path.join(os.path.dirname(__file__), "artifacts", "model.json")
 OUTCOME_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "outcomes")
@@ -34,8 +35,8 @@ OUTCOME_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "outcomes")
 def closure_history(directory=OUTCOME_DIR):
     """Who closed, and when, in the shape add_calendar_context expects.
 
-    Built from data/outcomes, the public record the morning job writes, NOT
-    from the internal closure history. Serving must never need internal data.
+    Built from data/outcomes, the public record, NOT from the internal closure
+    history. Serving must never need internal data.
 
     This exists because the history features were silently dead in production.
     predict() took an optional `events` argument, none of the three callers
@@ -44,35 +45,24 @@ def closure_history(directory=OUTCOME_DIR):
     argument that is wrong when omitted is a trap, so the loading now lives here
     and predict() uses it by default.
 
+    Reads all three outcome sources through outcomes.resolve(), not the news
+    file alone. That matters most for the two districts the feed may never
+    carry: without the manual and calendar sources they would read as "has not
+    closed recently" forever, which is the confident-and-wrong direction on the
+    second morning of a storm, on the strongest non-weather term in the model.
+
     Only full closures count. A delay is a different decision and the label the
     model is trained on is a closure.
+
+    KNOWN AND NOT FIXED HERE. A district nobody covers still reads zero rather
+    than unknown, and zero is a claim. The obvious fix, marking those rows
+    missing so the stored imputation decides, is worse in practice: the artifact
+    imputes closures_used at 1.0, which would assert that an uncovered district
+    had already spent a day in October. Widening the sources shrinks the problem
+    to whoever no source reaches; asserting a season-median in autumn would
+    replace a small bounded error with a larger one.
     """
-    if not os.path.isdir(directory):
-        return pd.DataFrame(columns=["leaid", "date", "kind"])
-
-    frames = []
-    for name in sorted(os.listdir(directory)):
-        if not (name.startswith("outcomes_") and name.endswith(".csv")):
-            continue
-        try:
-            frames.append(pd.read_csv(os.path.join(directory, name),
-                                      dtype={"leaid": str}))
-        except (OSError, ValueError):
-            # A truncated outcome file should cost us one day of history, not
-            # the whole evening's forecast.
-            continue
-    if not frames:
-        return pd.DataFrame(columns=["leaid", "date", "kind"])
-
-    out = pd.concat(frames, ignore_index=True)
-    if "status" not in out.columns or "leaid" not in out.columns:
-        return pd.DataFrame(columns=["leaid", "date", "kind"])
-
-    out = out[out["status"] == "closed"].copy()
-    out["date"] = pd.to_datetime(out["date"], errors="coerce")
-    out = out[out["date"].notna()]
-    out["kind"] = "closed"
-    return out[["leaid", "date", "kind"]].drop_duplicates()
+    return O.closures(out_dir=directory)
 
 
 def load(path=ARTIFACT):

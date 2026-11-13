@@ -4,11 +4,10 @@ A prediction tool that never publishes its record is asking to be believed on
 trust. This keeps the receipts: every morning we forecast, what we said, and
 what actually happened.
 
-Three sources have to agree on what "we scored this morning" means:
+Two things have to agree on what "we scored this morning" means:
 
     calls       data/calls/calls_*.csv, the 8pm call, frozen when made
-    checks      data/outcomes/checks.csv, mornings we actually looked
-    outcomes    data/outcomes/outcomes_*.csv, districts that closed
+    observed    which district-mornings we can vouch for, from outcomes.py
 
 SCORED AGAINST THE FROZEN CALL, NOT A RECOMPUTED ONE. The prediction could be
 re-derived from the stored forecast at any time, but then retraining the model
@@ -16,10 +15,21 @@ would rewrite the past: every previous call would shift, and the published
 accuracy would improve without a single new observation. The call is written
 once and scored exactly as written.
 
-The checks log is what makes the absence of a closure meaningful. Without it,
-an empty outcomes file for 12 January could mean nobody closed OR the job never
-ran, and scoring the second as "we correctly predicted open for 50 districts"
-would be flattering nonsense.
+SCORED ONLY WHERE WE ACTUALLY OBSERVED. Absence of a closure is not evidence of
+an open morning unless somebody was watching that district that day, and the
+two ways of getting this wrong are not symmetrical.
+
+The first was already handled: an empty outcomes file for 12 January could mean
+nobody closed OR the job never ran, and scoring the second as "we correctly
+predicted open for 50 districts" would be flattering nonsense. The checks log
+fixed that, per date.
+
+The second was not, and it is per DISTRICT. The WBNG viewing area is not the
+SCRIC region, so there are districts the feed will never carry. Reading their
+silence as "open" awarded this tool a free correct call for every uncovered
+district on every morning of the season, and scored a real closure at one of
+them as a miss. `outcomes.observed()` is now the gate, and it answers per
+district-morning rather than per date.
 
 The 05:00 capture is compared separately, to measure what the extra nine hours
 are worth. It never contributes to the published score, because it is not what
@@ -31,6 +41,7 @@ import os
 import numpy as np
 import pandas as pd
 
+import outcomes as O
 import predict as P
 import schoolday as SD
 
@@ -54,24 +65,34 @@ def _read_all(directory, prefix):
 
 
 def load_inputs():
+    """The frozen calls, the resolved outcomes, and what we can vouch for.
+
+    Outcomes arrive already merged across manual, calendar and news, so the
+    scorecard never has to know there is more than one source. Precedence lives
+    in outcomes.py, which is also where the coverage question is answered.
+    """
     calls = _read_all(CALLS_DIR, "calls_")
-    outcomes = _read_all(OUTCOME_DIR, "outcomes_")
-    checks = (pd.read_csv(CHECKS_CSV) if os.path.exists(CHECKS_CSV)
-              else pd.DataFrame(columns=["date", "ok"]))
-    return calls, outcomes, checks
+    stacked = O.load_all()
+    return calls, O.resolve(stacked), O.observed(stacked=stacked)
 
 
-def build(calls, outcomes, checks, roster=None, model=None):
+def build(calls, outcomes, observed, roster=None, model=None):
     """One row per district-morning we both called and observed.
 
     `calls` is the frozen record, so nothing is predicted here. roster and
     model are accepted only so callers need not care about that.
+
+    `observed` is a set of (date, leaid). It is a required argument and not a
+    defaulted one on purpose: this is the gate that keeps the published record
+    honest, and the version of this function that inferred it was the version
+    that got it wrong for a year. A caller that has nothing to pass should pass
+    an empty set and score nothing.
     """
-    if calls is None or calls.empty or checks.empty:
+    if calls is None or calls.empty or not observed:
         return pd.DataFrame()
 
-    observed = set(checks.loc[checks["ok"].astype(bool), "date"].astype(str))
-    pred = calls[calls["target_date"].astype(str).isin(observed)].copy()
+    keys = list(zip(calls["target_date"].astype(str), calls["leaid"]))
+    pred = calls[[k in observed for k in keys]].copy()
     if pred.empty:
         return pd.DataFrame()
 
@@ -188,13 +209,13 @@ def calibration(scorecard, bins=(0, .05, .15, .3, .5, .75, 1.0)):
     return out
 
 
-def lead_time_value(calls, forecasts, outcomes, checks, roster, model=None):
+def lead_time_value(calls, forecasts, outcomes, observed, roster, model=None):
     """What the extra nine hours buy: the 8pm call versus the 05:00 forecast.
 
     This one DOES recompute, from the morning capture, because no call was ever
     published at 5am. It is a diagnostic and never feeds the published score.
     """
-    card = build(calls, outcomes, checks, roster)
+    card = build(calls, outcomes, observed, roster)
     if card.empty or forecasts is None or forecasts.empty:
         return None
     if "capture_slot" not in forecasts.columns:
@@ -229,8 +250,8 @@ def refresh(roster=None):
     if roster is None:
         roster = pd.read_csv(os.path.join(ROOT, "reference", "roster.csv"),
                              dtype={"leaid": str})
-    calls, outcomes, checks = load_inputs()
-    card = build(calls, outcomes, checks, roster)
+    calls, outcomes, observed = load_inputs()
+    card = build(calls, outcomes, observed, roster)
     if not card.empty:
         card.to_csv(SCORECARD_CSV, index=False)
     return card, summarize(card)

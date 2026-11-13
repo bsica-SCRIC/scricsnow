@@ -34,6 +34,7 @@ REF = os.path.join(os.path.dirname(__file__), "..", "reference")
 ROSTER_CSV = os.path.join(REF, "roster.csv")
 GRIDS_CSV = os.path.join(REF, "district_grids.csv")
 FORECAST_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "forecasts")
+HOURLY_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "hourly")
 
 # api.weather.gov asks for a User-Agent identifying the application and a
 # contact. Requests without one get throttled or refused.
@@ -252,6 +253,143 @@ def features(props, target_date):
     }
 
 
+# The hourly series kept alongside the feature row, and the reason it exists.
+#
+# features() above reduces about fifteen hourly series to eighteen numbers and
+# discards the rest. Three of those numbers -- snow_start_hour, snow_end_hour,
+# snow_ongoing_at_9am -- are among the strongest signals we have for telling a
+# delay from a closure, and the FITTED model cannot use any of them, because it
+# is trained on GHCN daily observations which carry no hourly detail. Only the
+# hand-built heuristic scores them.
+#
+# There are two ways out of that and they are not competitors. NOAA ISD gives
+# hourly observations back fourteen seasons and is backfillable next summer
+# from the endpoint ghcn.py already calls, so it needs no live job. What is NOT
+# recoverable is our own forecast series: api.weather.gov serves no history, so
+# every hour not written down tonight is gone. Training on the archived
+# forecast also avoids the mismatch features.py spends two pages on, because
+# the column then means the same thing in training as it does in service.
+#
+# Kept flat rather than as raw JSON. The full gridpoint payload is about 7 GB a
+# season and does not belong in git; these columns are the ones anybody would
+# go back for, and they come to roughly 30 MB.
+HOURLY_COLUMNS = [
+    "target_date", "leaid", "capture_slot", "captured_at",
+    "time_local", "hour",
+    "snow_mm", "ice_mm", "qpf_mm", "temp_c", "wind_kmh", "gust_kmh", "pop",
+]
+
+# Which series are per-block TOTALS rather than states, and how many decimals
+# each is worth keeping. Same accumulation distinction expand_series() makes,
+# restated here so the two cannot drift apart.
+#
+# THE DECIMALS ARE NOT COSMETIC. NWS serves temperature in Celsius converted
+# from whole degrees Fahrenheit, so an unrounded value arrives as
+# 25.555555555555557: seventeen characters of which two are information. Across
+# fifty districts, three slots and two hundred nights that fake precision is
+# the difference between roughly 58 MB a season and 30. Every figure below is
+# still finer than the forecast it came from.
+HOURLY_SERIES = {
+    "snow_mm": ("snowfallAmount", True, 3),
+    "ice_mm": ("iceAccumulation", True, 3),
+    "qpf_mm": ("quantitativePrecipitation", True, 3),
+    "temp_c": ("temperature", False, 2),
+    "wind_kmh": ("windSpeed", False, 2),
+    "gust_kmh": ("windGust", False, 2),
+    "pop": ("probabilityOfPrecipitation", False, 0),
+}
+
+
+def hourly(props, target_date):
+    """The forecast window hour by hour, one row per hour.
+
+    Accumulations are PER HOUR, not running totals: a three-hour block holding
+    6 mm becomes three rows of 2 mm, which is what expand_series already does
+    and what makes the rows sum back to the feature row's totals.
+
+    `hour` uses the same 18-33 scale as features(): 18-23 is the evening
+    before, 24 onward is the target morning, so later always means larger.
+    `time_local` carries the same instant unambiguously, because this file is
+    written to be read next summer by somebody who has forgotten the scale.
+    """
+    start, end = window_bounds(target_date)
+
+    series = {name: _hourly(props, prop, is_accumulation=acc)
+              for name, (prop, acc, _) in HOURLY_SERIES.items()}
+    at = {}
+    for name, frame in series.items():
+        if frame.empty:
+            at[name] = {}
+            continue
+        clipped = frame[(frame["time"] >= start) & (frame["time"] < end)]
+        # Last value wins on a duplicated hour. NWS blocks do not normally
+        # overlap, but a re-issued grid can repeat one and a silent doubling
+        # would be worse than preferring the newer figure.
+        at[name] = {t: v for t, v in zip(clipped["time"], clipped["value"])}
+
+    rows = []
+    when = start
+    while when < end:
+        row = {"time_local": when.isoformat(timespec="minutes"),
+               "hour": when.hour + (24 if when.date() == target_date else 0)}
+        for name, (_, _, decimals) in HOURLY_SERIES.items():
+            value = at[name].get(when)
+            row[name] = (None if value is None or pd.isna(value)
+                         else round(float(value), decimals))
+        rows.append(row)
+        when += timedelta(hours=1)
+    return rows
+
+
+def hourly_path(target_date, hourly_dir=HOURLY_DIR):
+    """One gzipped file per target night.
+
+    Not one file per season. A day file is written at most three times, once
+    per capture slot, and never touched again; appending a season would rewrite
+    a growing blob six hundred times a winter and pack badly.
+
+    GZIPPED, unlike every other CSV here, and the reason the rule differs is
+    that these files are write-once. `forecast_{season}.csv` is committed
+    nightly and re-read by a human, so a readable diff is worth real bytes. A
+    day file is never diffed, only added, so there is nothing to read in a
+    diff and the bytes buy nothing.
+
+    Measured on a full night of 50 districts x 3 slots x 15 hours: 259 KB
+    plain, 43 KB gzipped, which is 53 MB a season against 9. pandas infers the
+    compression from the extension on both read and write, including over
+    HTTPS, so nothing else has to know.
+
+    The human-readable version of the same night has not gone anywhere: the
+    feature row per district is in data/forecasts as plain CSV. This file is
+    the archive underneath it.
+    """
+    stamp = pd.Timestamp(target_date).strftime("%Y-%m-%d")
+    return os.path.join(hourly_dir, f"{stamp}.csv.gz")
+
+
+def write_hourly(df, hourly_dir=HOURLY_DIR):
+    """Write the night's hourly rows, replacing this slot's if it re-runs."""
+    if df is None or (hasattr(df, "empty") and df.empty):
+        return None
+    df = pd.DataFrame(df)
+    if df.empty:
+        return None
+    os.makedirs(hourly_dir, exist_ok=True)
+
+    path = hourly_path(df["target_date"].iloc[0], hourly_dir)
+    if os.path.exists(path):
+        old = pd.read_csv(path, dtype={"leaid": str})
+        replacing = set(zip(df["target_date"], df["leaid"], df["capture_slot"]))
+        keep = [(t, l, s) not in replacing for t, l, s
+                in zip(old["target_date"], old["leaid"], old["capture_slot"])]
+        df = pd.concat([old[keep], df], ignore_index=True)
+
+    df = df[HOURLY_COLUMNS].sort_values(
+        ["target_date", "capture_slot", "leaid", "hour"])
+    df.to_csv(path, index=False)
+    return path
+
+
 def current_slot(now=None):
     """Which capture this run is. Derived from the clock, not passed in, so a
     delayed cron firing still lands in the right slot."""
@@ -279,12 +417,18 @@ def already_captured(target_date, slot=EVENING, forecast_dir=FORECAST_DIR):
 
 
 def snapshot(roster=None, target_date=None, sleep=0.4, verbose=True,
-             only_missing=False, slot=None):
+             only_missing=False, slot=None, hourly_out=None):
     """Fetch one overnight forecast row per district.
 
     Never raises for a single district. A night with 47 of 50 districts is
     worth far more than no night at all, and the failures are reported so a
     systematic problem is visible rather than silent.
+
+    hourly_out, if given a list, is extended with the hour-by-hour rows for
+    every district fetched. An out-parameter rather than a third return value
+    on purpose: one gridpoint response has to serve both outputs, and widening
+    the return tuple would break track.py, which wants only the feature rows
+    and captures far more often than the hourly file should be written.
     """
     if roster is None:
         roster = pd.read_csv(ROSTER_CSV, dtype={"leaid": str})
@@ -329,6 +473,15 @@ def snapshot(roster=None, target_date=None, sleep=0.4, verbose=True,
                 "captured_at": captured_at,
                 **features(props, target_date),
             })
+            if hourly_out is not None:
+                # Same response, second output. A district that failed above
+                # contributes to neither, which keeps the two files consistent
+                # with each other on a partial night.
+                hourly_out.extend(
+                    {"target_date": target_date.isoformat(),
+                     "leaid": d["leaid"], "capture_slot": slot,
+                     "captured_at": captured_at, **hour}
+                    for hour in hourly(props, target_date))
         except Exception as e:                      # noqa: BLE001
             failures.append((d["district"], str(e)[:120]))
         time.sleep(sleep)
@@ -380,6 +533,8 @@ def write_snapshot(df, forecast_dir=FORECAST_DIR, append_only=False):
 if __name__ == "__main__":
     import sys
 
+    import validate as V
+
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     only_missing = "--if-missing" in sys.argv
 
@@ -390,13 +545,32 @@ if __name__ == "__main__":
         if f"--{name}" in sys.argv:
             slot = name
 
+    hours = []
     df, failures = snapshot(target_date=target, only_missing=only_missing,
-                            slot=slot)
+                            slot=slot, hourly_out=hours)
     if df.empty and only_missing:
         print("nothing missing; night already captured")
         raise SystemExit(0)
     path = write_snapshot(df, append_only=only_missing)
     if path:
         print(f"wrote {path} ({len(df)} rows)")
+
+    # Written after the feature rows, deliberately. If this fails, the night's
+    # training row is already safe on disk; the hourly detail is the bonus, not
+    # the thing that cannot be missed.
+    hourly_written = write_hourly(pd.DataFrame(hours, columns=HOURLY_COLUMNS)
+                                  if hours else None)
+    if hourly_written:
+        print(f"wrote {hourly_written} ({len(hours)} hourly rows)")
+
     if failures:
         print(f"{len(failures)} district(s) failed; the night was still saved")
+
+    # Validated AFTER writing, never before. This is the job that cannot be
+    # missed, so the rows go to disk first and the exit code is only about
+    # whether anybody needs to be told. Refusing to write would throw away a
+    # night that cannot be recollected in order to report that it was odd.
+    raise SystemExit(V.gate(
+        df, "forecast", required=["target_date", "leaid", "capture_slot",
+                                  "captured_at", "snow_mm"],
+        date_cols=("target_date",), known_ids=V.roster_ids()))

@@ -28,8 +28,14 @@ def calls(rows):
         for d, l, p in rows])
 
 
-def checks(dates, ok=True):
-    return pd.DataFrame([{"date": d, "ok": ok, "records": 1} for d in dates])
+def observed(dates, leaids=("3604870", "3602400")):
+    """The (date, leaid) pairs a source could vouch for.
+
+    Was a per-date checks log. The gate is now per district-morning, because a
+    date the feed was checked on says nothing about a district the feed does
+    not carry.
+    """
+    return {(d, l) for d in dates for l in leaids}
 
 
 def outcomes(rows):
@@ -39,17 +45,17 @@ def outcomes(rows):
 
 
 def test_a_morning_we_never_checked_is_not_scored():
-    """The flattering bug this guards against: with no checks log, an empty
+    """The flattering bug this guards against: with nothing observed, an empty
     outcomes file looks like 'nobody closed', and the tool would award itself
     fifty correct 'open' calls for a morning it never observed."""
     card = S.build(calls([("2026-01-15", "3604870", 0.9)]), outcomes([]),
-                   checks([]), ROSTER)
+                   observed([]), ROSTER)
     assert card.empty
 
 
 def test_a_checked_morning_with_no_closures_scores_as_open():
     card = S.build(calls([("2026-01-15", "3604870", 0.01)]), outcomes([]),
-                   checks(["2026-01-15"]), ROSTER)
+                   observed(["2026-01-15"]), ROSTER)
     assert len(card) == 1
     assert bool(card["actual_closed"].iloc[0]) is False
     assert bool(card["correct"].iloc[0]) is True
@@ -58,7 +64,7 @@ def test_a_checked_morning_with_no_closures_scores_as_open():
 def test_a_recorded_closure_is_scored_as_closed():
     card = S.build(calls([("2026-01-15", "3604870", 0.9)]),
                    outcomes([("2026-01-15", "3604870", "closed")]),
-                   checks(["2026-01-15"]), ROSTER)
+                   observed(["2026-01-15"]), ROSTER)
     assert bool(card["actual_closed"].iloc[0]) is True
     assert bool(card["correct"].iloc[0]) is True
 
@@ -67,7 +73,7 @@ def test_the_stored_probability_is_used_verbatim():
     """The integrity rule. Scoring must read the frozen number, never
     recompute one, or retraining would rewrite the published record."""
     card = S.build(calls([("2026-01-15", "3604870", 0.37)]), outcomes([]),
-                   checks(["2026-01-15"]), ROSTER)
+                   observed(["2026-01-15"]), ROSTER)
     assert card["p_closed"].iloc[0] == pytest.approx(0.37)
 
 
@@ -124,8 +130,8 @@ def test_calibration_table_compares_claimed_against_observed():
 
 def test_empty_inputs_never_raise():
     empty = pd.DataFrame()
-    assert S.build(empty, empty, empty, ROSTER).empty
-    assert S.build(None, empty, empty, ROSTER).empty
+    assert S.build(empty, empty, set(), ROSTER).empty
+    assert S.build(None, empty, set(), ROSTER).empty
     assert S.summarize(pd.DataFrame())["scored_days"] == 0
     assert S.calibration(pd.DataFrame()).empty
 
@@ -133,7 +139,7 @@ def test_empty_inputs_never_raise():
 def test_lead_time_needs_a_morning_capture_before_it_reports():
     got = S.lead_time_value(calls([("2026-01-15", "3604870", 0.2)]),
                             pd.DataFrame(), outcomes([]),
-                            checks(["2026-01-15"]), ROSTER)
+                            observed(["2026-01-15"]), ROSTER)
     assert got is None
 
 
@@ -145,8 +151,8 @@ def _calls(**kw):
     return pd.DataFrame([base])
 
 
-def _checks(date="2026-01-15"):
-    return pd.DataFrame([{"date": date, "ok": True}])
+def _observed(date="2026-01-15", leaid="3604870"):
+    return {(date, leaid)}
 
 
 def _outcomes(status):
@@ -164,7 +170,7 @@ def test_a_delay_is_not_counted_as_a_missed_closure():
     from the first storm of the season and the calibration table would have
     shown it as under-confident everywhere.
     """
-    card = S.build(_calls(), _outcomes("delay"), _checks())
+    card = S.build(_calls(), _outcomes("delay"), _observed())
     assert not bool(card["actual_closed"].iloc[0])
     # It is still a disruption, and the head that predicts disruptions is
     # scored against it.
@@ -172,7 +178,7 @@ def test_a_delay_is_not_counted_as_a_missed_closure():
 
 
 def test_a_closure_counts_for_both_heads():
-    card = S.build(_calls(), _outcomes("closed"), _checks())
+    card = S.build(_calls(), _outcomes("closed"), _observed())
     assert bool(card["actual_closed"].iloc[0])
     assert bool(card["actual_disrupted"].iloc[0])
 
@@ -180,13 +186,13 @@ def test_a_closure_counts_for_both_heads():
 def test_an_early_dismissal_scores_as_neither():
     """An early dismissal is decided mid-morning. What gets scored here is the
     overnight call, so it is not an outcome this tool claimed to predict."""
-    card = S.build(_calls(), _outcomes("early"), _checks())
+    card = S.build(_calls(), _outcomes("early"), _observed())
     assert not bool(card["actual_closed"].iloc[0])
     assert not bool(card["actual_disrupted"].iloc[0])
 
 
 def test_summary_reports_the_two_heads_separately():
-    card = S.build(_calls(), _outcomes("delay"), _checks())
+    card = S.build(_calls(), _outcomes("delay"), _observed())
     s = S.summarize(card)
     assert s["closures_seen"] == 0
     assert s["disruptions_seen"] == 1
@@ -194,3 +200,34 @@ def test_summary_reports_the_two_heads_separately():
     # false alarm for closures and a hit for disruptions.
     assert s["false_alarms"] == 1
     assert s["disruptions_called"] == 1
+
+
+def test_an_uncovered_district_is_not_scored_as_a_correct_open_call():
+    """The flattering bug, at the scorecard level.
+
+    Two districts called on the same morning. Only Binghamton was observed.
+    Johnson City must not appear at all: scoring it as a correct "open" call
+    is free credit for a morning nobody watched it, and if it HAD closed the
+    same gap would have recorded a miss.
+    """
+    card = S.build(
+        calls([("2026-01-15", "3604870", 0.05),
+               ("2026-01-15", "3615900", 0.05)]),
+        outcomes([]),
+        {("2026-01-15", "3604870")},
+        ROSTER)
+    assert list(card["leaid"]) == ["3604870"]
+    assert S.summarize(card)["district_mornings"] == 1
+
+
+def test_an_override_is_scored_on_a_morning_the_feed_never_reported():
+    """The two off-export districts are scorable only this way, so the path
+    from a typed override to the published record has to work end to end."""
+    card = S.build(
+        calls([("2026-01-15", "3615900", 0.8)]),
+        outcomes([("2026-01-15", "3615900", "closed")]),
+        {("2026-01-15", "3615900")},
+        ROSTER)
+    assert len(card) == 1
+    assert bool(card["actual_closed"].iloc[0]) is True
+    assert bool(card["correct"].iloc[0]) is True

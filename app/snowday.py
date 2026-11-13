@@ -22,6 +22,7 @@ Design notes, since several choices here are deliberate rather than decorative:
     its receipts is asking to be believed on trust.
 """
 
+import functools
 import json
 import os
 import sys
@@ -169,48 +170,148 @@ def script_frame(html):
 
 # --------------------------------------------------------------------------
 # Data
+#
+# NO LOADER MAY RAISE. Streamlit answers an uncaught exception with a red
+# traceback where the forecast should be, and every loader below reads a file
+# that a bot wrote unattended at three in the morning. A malformed CSV is then
+# not a missing card, it is a broken public page on the night the most people
+# are looking at it.
+#
+# So each one degrades to something the page can render: an empty frame, an
+# empty scorecard, no map. The page is already written to handle those, because
+# they are also what August looks like.
+#
+# resilient() sits INSIDE the cache deliberately, so a failure is cached for
+# the same TTL as a success. Retrying a broken file on every rerun of every
+# session would turn one bad commit into a load problem as well as a display
+# one.
 # --------------------------------------------------------------------------
 
+def resilient(fallback, what):
+    """Wrap a loader so a bad file costs one card, not the page."""
+    def wrap(fn):
+        @functools.wraps(fn)
+        def inner(*args, **kwargs):
+            try:
+                return fn(*args, **kwargs)
+            except Exception as exc:                    # noqa: BLE001
+                # Printed, not shown. The reader cannot act on it and a
+                # stack trace next to a snow day forecast helps nobody; the
+                # Actions log and the container log are where this belongs.
+                print(f"[snowday] {what} unavailable: "
+                      f"{type(exc).__name__}: {exc}")
+                return fallback() if callable(fallback) else fallback
+        return inner
+    return wrap
+
+
+def _empty(*columns):
+    return lambda: pd.DataFrame(columns=list(columns))
+
+
 @st.cache_data(ttl=3600)
+@resilient(_empty("leaid", "district", "lat", "lon", "elev_m"), "the roster")
 def load_roster():
     return pd.read_csv(os.path.join(ROOT, "reference", "roster.csv"),
                        dtype={"leaid": str}).sort_values("district")
 
 
 @st.cache_data(ttl=3600)
+@resilient(_empty("leaid", "district", "days_built_in"), "the snow-day bank")
 def load_bank():
     return B.load()
 
 
 @st.cache_data(ttl=300)
+@resilient(_empty("leaid", "date", "status"), "recorded closings")
 def load_outcomes(season):
     return B.load_outcomes(season)
 
 
+# {"bands": []} rather than {}: an empty dict is falsy, so verdicts.load()
+# would simply be called again on the very file that just failed. The
+# built-in FALLBACK_BANDS take over from here.
 @st.cache_data(ttl=3600)
+@resilient(lambda: {"bands": []}, "the verdict wording")
 def load_verdicts():
     return V.load()
 
 
+# An empty calendar means no day is known to be a holiday, so the page keeps
+# forecasting. The opposite default would blank the site over Christmas week
+# and look identical to working correctly.
 @st.cache_data(ttl=3600)
+@resilient(_empty("date", "reason"), "the school calendar")
 def load_calendar():
     return SD.load()
 
 
 @st.cache_data(ttl=3600)
+@resilient(_empty("leaid", "name", "polygon"), "the district map")
 def load_shapes():
-    return SHP.to_polygons(SHP.load())
+    """District rings, thinned to what survives at display size.
+
+    Simplified HERE, inside the cache, rather than in render(): it costs about
+    15 ms and the result is reused by every viewer for an hour, whereas doing
+    it per render would pay it on every rerun of every session.
+    """
+    frame = SHP.to_polygons(SHP.load())
+    if len(frame):
+        frame = frame.copy()
+        frame["polygon"] = RM.simplify(list(frame["polygon"]))
+    return frame
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+@resilient("", "the map drawing")
+def render_map(fill_items, tip_items, selected, theme, aria):
+    """The SVG, cached on everything that can change it.
+
+    THE MAP IS THE PAGE'S DOMINANT COST, and it is bandwidth rather than CPU:
+    building it takes about 5 ms, but it is 61 KB of markup that Streamlit
+    ships over the websocket on every rerun. On a storm night with a few
+    thousand people refreshing, that one element is most of the traffic.
+
+    The arguments are tuples of items rather than dicts because a cache key has
+    to be hashable. What actually varies is small: fills and tooltips change
+    when a new capture lands, roughly hourly, and selected and theme change
+    only when a reader acts. So a few dozen strings serve everybody, and
+    identical output between reruns also lets Streamlit's own forward-message
+    cache recognise the element instead of resending it.
+    """
+    polys = load_shapes()
+    colours = MAP_COLOURS[theme]
+    return RM.render(
+        RM.polygons_from(polys), dict(fill_items), selected=selected,
+        line=colours["line"], selected_line=colours["selected"],
+        background="none", tooltips=dict(tip_items), aria=aria)
 
 
 @st.cache_data(ttl=300)
 def load_closings():
+    """What is announced right now. READ ONLY -- never NEWS.collect().
+
+    collect() archives the raw payload to disk whenever it is non-empty, which
+    is right for the once-a-morning job and wrong here. On the first real snow
+    day this function runs every five minutes for as long as the app is up, so
+    calling collect() would write a JSON file every five minutes into a
+    container with an ephemeral filesystem and about a gigabyte of memory, to
+    archive a payload the Actions job has already archived properly.
+
+    fetch() and parse() have no side effects, which is the whole reason they
+    are separate functions from collect().
+    """
     try:
-        return NEWS.collect(verbose=False)
+        payload, meta = NEWS.fetch()
+        if not meta.get("ok"):
+            return pd.DataFrame(), meta
+        return NEWS.parse(payload, load_roster()), meta
     except Exception:                                   # noqa: BLE001
         return pd.DataFrame(), {"ok": False}
 
 
 @st.cache_data(ttl=600)
+@resilient(lambda: (pd.DataFrame(), None, "none"), "tonight's numbers")
 def region_now(target_iso):
     """Latest probability for every district, newest source that has one.
 
@@ -244,24 +345,8 @@ def region_now(target_iso):
     return pd.DataFrame(), None, "none"
 
 
-@st.cache_data(ttl=900)
-def live_one(leaid, lat, lon, district, target_iso):
-    """One gridpoint call, for when the stored reading has gone stale."""
-    row = pd.DataFrame([{"leaid": leaid, "district": district,
-                         "lat": lat, "lon": lon}])
-    graded = nws.ensure_grids(row)
-    if graded["office"].isna().all():
-        return None
-    g = graded.iloc[0]
-    props = nws.get(f"{nws.API}/gridpoints/{g['office']}"
-                    f"/{int(g['grid_x'])},{int(g['grid_y'])}")["properties"]
-    target = datetime.fromisoformat(target_iso).date()
-    return pd.DataFrame([{"target_date": target_iso, "leaid": leaid,
-                          "district": district,
-                          **nws.features(props, target)}])
-
-
 @st.cache_data(ttl=3600)
+@resilient(lambda: (pd.DataFrame(), {"district_mornings": 0}), "the accuracy record")
 def load_scorecard():
     return SC.refresh()
 
@@ -285,6 +370,19 @@ def fill_for(p, theme):
 
 roster = load_roster()
 verdict_data = load_verdicts()
+
+# The one file the page cannot do without. Every other loader degrades to a
+# missing card; without the roster there is no district to pick, so the code
+# below would index an empty frame and put a traceback on the page instead.
+#
+# Says nothing about why. A reader can do nothing with a filename, and the
+# detail is already in the container log where somebody can act on it.
+if roster.empty:
+    st.markdown("# ❄️ Snow Day Predictor")
+    card('<div class="verdict">🔧 Back shortly</div>'
+         '<p class="muted">The forecast is briefly unavailable. '
+         "Check with your district or the news for anything official.</p>")
+    st.stop()
 
 with st.sidebar:
     st.markdown("### ❄️ Settings")
@@ -405,16 +503,8 @@ if len(mine):
     p_now = float(mine["p_closed"].iloc[0])
     snow_in = float(mine["snow_in"].iloc[0])
 
-stale = (captured_at is None
-         or (datetime.now(timezone.utc) - captured_at.to_pydatetime()) > STALE_AFTER)
-if predictable and (p_now is None or (stale and source != "archive")):
-    fc = live_one(row["leaid"], float(row["lat"]), float(row["lon"]),
-                  row["district"], target_iso)
-    if fc is not None and len(fc):
-        out = P.predict(fc, roster)
-        p_now = float(out["p_closed"].iloc[0])
-        snow_in = float(out["snow_in"].iloc[0])
-        source = "live"
+freshness = (V.reading_age(captured_at, source, nws.LOCAL_TZ, STALE_AFTER)
+             if predictable else "")
 
 with style_slot:
     style(theme, snowing=snow_in >= 0.5)
@@ -470,6 +560,8 @@ else:
     else:
         sub = ('<p class="muted">The 8pm Call has not been made yet tonight. '
                "This number changes until then.</p>")
+    if freshness:
+        sub += f'<p class="muted">{freshness}</p>'
 
     card(f'<div class="big">{pct:.0f}%</div>'
          f'<div class="verdict">{emoji} {msg}</div>'
@@ -517,10 +609,9 @@ if len(polys):
             fills[leaid] = fill_for(0.0, theme)
             tips[leaid] = name
 
-    svg = RM.render(
-        RM.polygons_from(polys), fills, selected=row["leaid"],
-        line=colours["line"], selected_line=colours["selected"],
-        background="none", tooltips=tips,
+    svg = render_map(
+        tuple(sorted(fills.items())), tuple(sorted(tips.items())),
+        row["leaid"], theme,
         aria=(f"Closure chance across {polys['leaid'].nunique()} districts"
               if scored else
               f"The {polys['leaid'].nunique()} districts covered"))

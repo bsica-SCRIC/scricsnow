@@ -30,6 +30,33 @@ from html import escape
 # the edge are not clipped against the frame.
 PAD = 0.02
 
+# COORDINATE PRECISION, AND WHY IT IS NOT FIVE DECIMALS.
+#
+# The path coordinates are in SVG user units, and the whole region is about
+# 1.83 units wide. At the ~700 px this renders at in a desktop card, one CSS
+# pixel is 0.0026 units, so five decimal places resolved about four hundred
+# times finer than anything anyone can see. It also resolved seventy times
+# finer than the source data: shapes.py asks TIGER to generalize at 0.001
+# degrees, which lands near 0.0007 units.
+#
+# That is not a rounding nicety. render() emits one string per rerun and
+# Streamlit ships it over the websocket every time, so those digits are paid
+# for by every viewer on every refresh, on the night when the most people are
+# refreshing. Three decimals is still sub-pixel and cuts the payload by a
+# quarter on its own.
+COORD_DECIMALS = 3
+
+# How far a simplified boundary may stray from the real one, in CSS pixels at
+# REFERENCE_WIDTH_PX. One pixel is two device pixels on a phone, which for a
+# region 110 miles across works out near 0.16 miles of boundary error -- far
+# below anything that changes which district a reader thinks they are looking
+# at, and still coarser than the TIGER generalization we started from.
+#
+# Measured on the 50-district geojson: 139 KB and 8,238 points unsimplified,
+# 61 KB and 4,459 points at one pixel.
+SIMPLIFY_PX = 1.0
+REFERENCE_WIDTH_PX = 700.0
+
 # No city dots. They were tried as orientation anchors and read as
 # unexplained specks floating inside districts, because there is no text in
 # this SVG to label them. An unlabelled dot is noise. If orientation turns out
@@ -54,12 +81,122 @@ def _projector(lon0, lat0, lon1, lat1):
     return project, (lon1 - lon0) * k, (lat1 - lat0)
 
 
-def _path(points, project):
-    d = []
-    for i, (lon, lat) in enumerate(points):
+def _path(points, project, decimals=COORD_DECIMALS):
+    """One ring as an SVG path.
+
+    Points that collapse onto each other once rounded are dropped. Without
+    that, reducing the precision would keep every duplicate and give back a
+    chunk of what the rounding just saved.
+    """
+    d, last = [], None
+    for lon, lat in points:
         x, y = project(lon, lat)
-        d.append(f"{'M' if i == 0 else 'L'}{x:.5f},{y:.5f}")
+        here = f"{x:.{decimals}f},{y:.{decimals}f}"
+        if here == last:
+            continue
+        d.append(("M" if not d else "L") + here)
+        last = here
     return "".join(d) + "Z"
+
+
+def _perpendicular(point, start, end):
+    (x, y), (x1, y1), (x2, y2) = point, start, end
+    dx, dy = x2 - x1, y2 - y1
+    span = math.hypot(dx, dy)
+    if not span:
+        return math.hypot(x - x1, y - y1)
+    return abs(dy * x - dx * y + x2 * y1 - y2 * x1) / span
+
+
+def _douglas_peucker(points, tolerance):
+    """Keep the points that carry the shape. Iterative, not recursive.
+
+    A district boundary can run to several hundred vertices, and a recursive
+    implementation on a pathological ring is a stack overflow inside a page
+    render. An explicit stack costs nothing and cannot do that.
+    """
+    if len(points) < 3:
+        return list(points)
+    keep = [False] * len(points)
+    keep[0] = keep[-1] = True
+    stack = [(0, len(points) - 1)]
+    while stack:
+        lo, hi = stack.pop()
+        if hi <= lo + 1:
+            continue
+        worst, at = -1.0, lo
+        for i in range(lo + 1, hi):
+            gap = _perpendicular(points[i], points[lo], points[hi])
+            if gap > worst:
+                worst, at = gap, i
+        if worst > tolerance:
+            keep[at] = True
+            stack.append((lo, at))
+            stack.append((at, hi))
+    return [p for p, k in zip(points, keep) if k]
+
+
+def _simplify_ring(ring, tolerance):
+    """Douglas-Peucker on a CLOSED ring.
+
+    Closed rings need a wrinkle. Douglas-Peucker anchors on the first and last
+    point, and on a ring those are the same point, so the segment between them
+    has zero length and every vertex measures as zero distance from it: run
+    naively, a whole district collapses to a single point. Splitting the ring
+    at its farthest vertex first gives two open polylines with real endpoints.
+    """
+    closed = len(ring) > 1 and ring[0] == ring[-1]
+    pts = list(ring[:-1]) if closed else list(ring)
+    if len(pts) < 4:
+        return list(ring)
+
+    x0, y0 = pts[0]
+    far = max(range(len(pts)),
+              key=lambda i: (pts[i][0] - x0) ** 2 + (pts[i][1] - y0) ** 2)
+    head = _douglas_peucker(pts[:far + 1], tolerance)
+    tail = _douglas_peucker(pts[far:] + [pts[0]], tolerance)
+    out = head[:-1] + tail
+
+    # A ring that simplified below a drawable triangle is not a simplification,
+    # it is a deletion. Give the original back rather than a sliver.
+    if len(out) < 4:
+        return list(ring)
+    return out + [out[0]] if closed else out
+
+
+def simplify(rings, px=SIMPLIFY_PX, reference_px=REFERENCE_WIDTH_PX):
+    """Thin every ring to what survives at display size.
+
+    Tolerance is derived from the bounding box of the whole set, so it means
+    the same thing for a large district and a small one: both are allowed to
+    stray by the same number of pixels on the finished map.
+
+    Called once behind the app's cached shape loader, never per rerun.
+    """
+    rings = [list(r) for r in rings]
+    drawable = [r for r in rings if len(r) >= 2]
+    if not drawable:
+        return rings
+
+    lon0, lat0, lon1, lat1 = _bounds(drawable)
+    k = math.cos(math.radians((lat0 + lat1) / 2))
+    width = (lon1 - lon0) * k
+    if width <= 0:
+        return rings
+    tolerance = (width / reference_px) * px
+
+    out = []
+    for ring in rings:
+        if len(ring) < 4:
+            out.append(ring)
+            continue
+        # Simplify in projected space, so the tolerance is a distance on the
+        # drawing rather than in degrees, which are not the same length in x
+        # and y at this latitude.
+        projected = [((lon - lon0) * k, lat1 - lat) for lon, lat in ring]
+        thinned = _simplify_ring(projected, tolerance)
+        out.append([(x / k + lon0, lat1 - y) for x, y in thinned])
+    return out
 
 
 def render(polygons, fills, selected=None, line="#28405899",
@@ -100,6 +237,8 @@ def render(polygons, fills, selected=None, line="#28405899",
             f'stroke-width="2.5" vector-effect="non-scaling-stroke" '
             f'stroke-linejoin="round" pointer-events="none"/>')
 
+    # Four numbers, so precision here costs nothing and a tight viewBox is
+    # worth more than a short one.
     view = (f"{-padx:.5f} {-pady:.5f} "
             f"{width + 2 * padx:.5f} {height + 2 * pady:.5f}")
     return (

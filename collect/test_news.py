@@ -400,3 +400,26 @@ def test_main_writes_nothing_outside_the_directory_it_is_given(monkeypatch,
     _run(monkeypatch, tmp_path, payload)
     real = os.path.join(os.path.dirname(__file__), "..", "data", "outcomes")
     assert not os.path.exists(os.path.join(real, "outcomes_2025.csv"))
+
+
+def test_the_read_only_path_matches_collect_and_writes_nothing(tmp_path):
+    """The app must never call collect().
+
+    collect() archives the raw payload whenever it is non-empty. That is right
+    for the once-a-morning job and wrong for a page that refreshes every five
+    minutes on an ephemeral filesystem. fetch() and parse() are the read-only
+    pair, and this pins that they are equivalent so nobody "simplifies" the app
+    back onto collect().
+    """
+    raw = str(tmp_path / "raw")
+    payload_json = payload([{"name": "Afton Central School District",
+                             "status": "Closed"}])
+
+    read_only = N.parse(payload_json, ROSTER)
+    assert len(read_only) == 1
+    assert read_only["status"].iloc[0] == "closed"
+    assert not os.path.exists(raw)
+
+    # And the archiving path, for contrast: same rows, plus a file on disk.
+    archived = N.archive_raw(payload_json, {"ok": True}, raw_dir=raw)
+    assert os.path.exists(archived)

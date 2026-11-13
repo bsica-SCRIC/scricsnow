@@ -25,7 +25,7 @@ clear January Tuesday this writes nothing and commits nothing.
 
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pandas as pd
 
@@ -111,6 +111,43 @@ def write_history(pred, history_dir=HISTORY_DIR):
     return path
 
 
+def slot_target(now=None):
+    """The night this run is about, when nobody said.
+
+    Mirrors nws.snapshot's rule rather than restating it: a morning run is
+    forecasting today, an evening run is forecasting tomorrow. Duplicating the
+    rule here with a different answer would make --if-active check one night
+    and the fetch capture another, so the two are derived from the same
+    current_slot().
+    """
+    now = now or datetime.now(nws.LOCAL_TZ)
+    if nws.current_slot(now) == nws.MORNING:
+        return now.date()
+    return (now + timedelta(days=1)).date()
+
+
+def region_is_active(target_date, history_dir=HISTORY_DIR):
+    """Is anything happening tonight, judged from what is already on disk?
+
+    The gate for the 15-minute sweeps. The hourly anchor run always does the
+    full fifty-district fetch; the sweeps exist only to catch a grid amendment
+    sooner on a night that is actually going somewhere, and on a clear Tuesday
+    in February they should cost nothing at all -- no API calls, no commit.
+
+    The signal is free, because write_history already applies exactly this
+    judgement: it writes nothing unless worth_recording() says the region is
+    doing something. So a history row for tonight IS the "tonight matters"
+    flag, and no new state has to be invented or kept in step.
+
+    The consequence is that a night becoming active is noticed by the anchor
+    run rather than by a sweep, so the sweeps start up to an hour after the
+    first snow appears in the forecast. That is the right trade: the anchor is
+    the job that must not be missed, and the sweeps only add resolution within
+    an hour that is already being watched.
+    """
+    return not load_history(target_date, history_dir).empty
+
+
 def existing_call(target_date, calls_dir=CALLS_DIR):
     path = _season_path(calls_dir, target_date, "calls")
     if not os.path.exists(path):
@@ -189,10 +226,20 @@ def load_history(target_date, history_dir=HISTORY_DIR):
 
 
 if __name__ == "__main__":
+    import validate as V
+
     make_call = "--call" in sys.argv
     force = "--force" in sys.argv
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     target = pd.Timestamp(args[0]).date() if args else None
+
+    # --if-active is checked BEFORE any network call, which is the whole point
+    # of it. A quiet night costs a runner boot and nothing else.
+    if "--if-active" in sys.argv:
+        when = target or slot_target()
+        if not region_is_active(when):
+            print(f"quiet night for {when}; no fetch, no commit")
+            raise SystemExit(0)
 
     pred, failures = predictions(target_date=target)
     if pred.empty:
@@ -211,3 +258,10 @@ if __name__ == "__main__":
     if make_call:
         path, why = write_call(pred, force=force)
         print(f"call: {why}" + (f" -> {path}" if path else ""))
+
+    # After both writes, so a bad frame is reported rather than hidden and the
+    # rows already on disk are the evidence for working out why.
+    raise SystemExit(V.gate(
+        pred, "predictions",
+        required=["target_date", "leaid", "p_closed", "p_disrupted", "snow_in"],
+        date_cols=("target_date",), known_ids=V.roster_ids()))

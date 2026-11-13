@@ -206,3 +206,114 @@ def test_a_legacy_file_without_slots_is_read_as_evening(tmp_path):
     from datetime import date
     got = nws.already_captured(date(2026, 1, 15), nws.EVENING, str(tmp_path))
     assert got == {"3604870"}
+
+
+# --------------------------------------------------------------------------
+# The hourly series
+#
+# api.weather.gov serves no history, so an hour not written down tonight is
+# gone permanently. That makes shape bugs here the same kind of unrecoverable
+# as a missed snapshot, which is why they get pinned rather than eyeballed.
+# --------------------------------------------------------------------------
+
+def test_the_window_is_fifteen_hours_starting_at_six_pm():
+    rows = nws.hourly(props(), TARGET)
+    assert len(rows) == 15
+    assert rows[0]["time_local"].startswith("2026-01-14T18:00")
+    assert rows[-1]["time_local"].startswith("2026-01-15T08:00")
+
+
+def test_hour_uses_the_same_scale_as_the_feature_row():
+    """18-23 is the evening before, 24 onward is the target morning, so later
+    always means larger. features() already documents this; the two have to
+    agree or a column joined across them silently inverts."""
+    rows = nws.hourly(props(), TARGET)
+    assert [r["hour"] for r in rows] == list(range(18, 33))
+
+
+def test_accumulations_are_per_hour_and_sum_back_to_the_feature_total():
+    """The rows have to reconcile with features(), or the archive quietly
+    disagrees with the row the model was actually served."""
+    payload = props(snowfallAmount=[block((14, 21), 3, 6.0)])
+    rows = nws.hourly(payload, TARGET)
+    hourly_total = sum(r["snow_mm"] or 0 for r in rows)
+    assert hourly_total == pytest.approx(6.0)
+    assert hourly_total == pytest.approx(nws.features(payload, TARGET)["snow_mm"])
+
+
+def test_a_state_series_is_copied_not_divided():
+    """Temperature is not an accumulation. Dividing it across a block would
+    make a 3-hour block at -6 read as three hours of -2."""
+    rows = nws.hourly(props(temperature=[block((14, 20), 3, -6.0)]), TARGET)
+    got = [r["temp_c"] for r in rows if r["hour"] in (20, 21, 22)]
+    assert got == [-6.0, -6.0, -6.0]
+
+
+def test_hours_the_forecast_says_nothing_about_are_none_not_zero():
+    """Zero snow and no forecast are different claims, and the difference is
+    the whole reason this is archived rather than recomputed later."""
+    rows = nws.hourly(props(snowfallAmount=[block((14, 22), 1, 2.0)]), TARGET)
+    assert rows[0]["snow_mm"] is None
+    assert [r["snow_mm"] for r in rows if r["hour"] == 22] == [2.0]
+
+
+def test_an_empty_payload_still_produces_the_full_window():
+    """A district whose gridpoint carries nothing must still leave a record
+    that we looked, or a gap becomes indistinguishable from a missed capture."""
+    rows = nws.hourly({}, TARGET)
+    assert len(rows) == 15
+    assert all(r["snow_mm"] is None for r in rows)
+
+
+def test_every_hourly_column_is_present_on_every_row():
+    payload = props(snowfallAmount=[block((14, 20), 6, 12.0)],
+                    temperature=[block((14, 18), 15, -4.0)])
+    rows = nws.hourly(payload, TARGET)
+    expected = set(nws.HOURLY_COLUMNS) - {
+        "target_date", "leaid", "capture_slot", "captured_at"}
+    for row in rows:
+        assert set(row) == expected
+
+
+def test_rerunning_a_slot_replaces_its_rows_rather_than_doubling(tmp_path):
+    import pandas as pd
+
+    def rows(slot, snow):
+        return pd.DataFrame([
+            {"target_date": "2026-01-15", "leaid": "3604870",
+             "capture_slot": slot, "captured_at": "2026-01-14T20:00:00-05:00",
+             "time_local": "2026-01-14T18:00", "hour": 18, "snow_mm": snow,
+             "ice_mm": 0.0, "qpf_mm": 0.0, "temp_c": -2.0, "wind_kmh": 10.0,
+             "gust_kmh": 20.0, "pop": 50.0}])
+
+    d = str(tmp_path)
+    nws.write_hourly(rows("evening", 1.0), hourly_dir=d)
+    nws.write_hourly(rows("morning", 2.0), hourly_dir=d)
+    nws.write_hourly(rows("evening", 9.0), hourly_dir=d)
+
+    out = pd.read_csv(nws.hourly_path("2026-01-15", d), dtype={"leaid": str})
+    assert len(out) == 2, "a re-run doubled the rows instead of replacing them"
+    by_slot = dict(zip(out["capture_slot"], out["snow_mm"]))
+    assert by_slot == {"evening": 9.0, "morning": 2.0}
+
+
+def test_one_gzipped_file_per_night(tmp_path):
+    """Write-once files, so a readable diff buys nothing and the bytes are
+    real: 53 MB a season plain against 9 gzipped."""
+    assert nws.hourly_path("2026-01-15", str(tmp_path)).endswith(
+        "2026-01-15.csv.gz")
+
+
+def test_the_night_file_round_trips_through_gzip(tmp_path):
+    import pandas as pd
+    row = pd.DataFrame([{
+        "target_date": "2026-01-15", "leaid": "3604870",
+        "capture_slot": "evening", "captured_at": "2026-01-14T20:00:00-05:00",
+        "time_local": "2026-01-14T18:00-05:00", "hour": 18, "snow_mm": 1.5,
+        "ice_mm": 0.0, "qpf_mm": 0.4, "temp_c": -2.0, "wind_kmh": 10.0,
+        "gust_kmh": 20.0, "pop": 50.0}])
+    path = nws.write_hourly(row, hourly_dir=str(tmp_path))
+    back = pd.read_csv(path, dtype={"leaid": str})
+    assert list(back.columns) == nws.HOURLY_COLUMNS
+    assert back["snow_mm"].iloc[0] == 1.5
+    assert back["leaid"].iloc[0] == "3604870"

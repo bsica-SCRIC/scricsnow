@@ -17,8 +17,13 @@ bank is still readable in March when most of it is gone.
 """
 
 import os
+import sys
 
 import pandas as pd
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "model"))
+
+import outcomes as O  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 BANK_CSV = os.path.join(ROOT, "reference", "district_bank.csv")
@@ -51,17 +56,23 @@ def load(path=BANK_CSV):
 
 
 def load_outcomes(season, out_dir=OUTCOMES_DIR):
-    """Recorded closings for one season.
+    """Recorded closings for one season, from every source that has them.
 
-    A missing file means the season has not started yet, which is a real zero
-    rather than an error. It is worth knowing that it also looks identical to
-    a collector that never ran, so a silent burndown of zero in February is a
+    Resolved across manual, calendar and news rather than read out of the news
+    file alone, because the burndown is a per-district number and the feed does
+    not reach every district. A district the feed never carries would otherwise
+    show a full bank in March.
+
+    No outcomes at all means the season has not started yet, which is a real
+    zero rather than an error. It is worth knowing that it also looks identical
+    to a collector that never ran, so a silent burndown of zero in February is a
     signal to go and check the collector, not to trust the number.
     """
-    path = os.path.join(out_dir, f"outcomes_{season}.csv")
-    if not os.path.exists(path):
+    res = O.resolve(out_dir=out_dir)
+    if res.empty:
         return pd.DataFrame(columns=["leaid", "date", "status"])
-    return pd.read_csv(path, dtype={"leaid": str})
+    mine = res[[season_of(d) == season for d in res["date"]]]
+    return mine[["leaid", "date", "status"]].reset_index(drop=True)
 
 
 def spent(outcomes, leaid):

@@ -1,0 +1,87 @@
+# The moving number, and the 8pm Call.
+#
+# TWO CADENCES, AND THE SECOND ONE COSTS NOTHING ON A QUIET NIGHT.
+#
+#   hourly    the anchor. Always does the full fifty-district fetch.
+#   :15/:30/:45  sweeps. Pass --if-active, which reads what is already on disk
+#             and exits before making a single API call unless the region is
+#             actually doing something.
+#
+# Why fifteen minutes and not five: five is faster than the source. The
+# forecaster issues routine grid updates a few times a day and amends during
+# active weather, so a five-minute poll returns an identical forecast almost
+# every time, and a page advertising five-minute updates while showing the same
+# number for two hours reads as broken rather than fresh.
+#
+# This cadence is only affordable because data goes to a branch nothing
+# deploys. Sixty captures a night would otherwise be sixty restarts of the
+# public site, on the night most people are watching it.
+#
+# The 8pm Call needs no cron of its own. --call is passed on every run and
+# track.in_call_window() decides which one counts, so the call lands correctly
+# through both daylight-saving transitions without a second schedule.
+name: track-predictions
+
+on:
+  schedule:
+    # 16:00-09:00 EST, October through April. Cron cannot wrap midnight, hence
+    # the two hour ranges.
+    - cron: "0 0-14,21-23 * 10,11,12,1,2,3,4 *"
+    - cron: "15,30,45 0-14,21-23 * 10,11,12,1,2,3,4 *"
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: "YYYY-MM-DD to score (blank = derive from the clock)"
+        required: false
+      make_call:
+        description: "Attempt the 8pm Call (still refused outside 19:00-21:00)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: track-predictions
+  cancel-in-progress: false
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Put the data branch where the code expects data/
+        run: rm -rf data
+      - uses: actions/checkout@v4
+        with:
+          ref: data
+          path: data
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Track
+        run: |
+          args=""
+          case "${{ github.event.schedule }}" in
+            15,30,45*) args="--if-active" ;;
+          esac
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ] \
+             || [ "${{ inputs.make_call }}" = "true" ]; then
+            args="$args --call"
+          fi
+          python collect/track.py ${{ inputs.target_date }} $args
+
+      # On a quiet night this commits nothing: write_history refuses to record
+      # a night where nothing is happening, so there is no repository noise on
+      # a clear January Tuesday.
+      - name: Commit
+        if: ${{ !cancelled() }}
+        run: .github/scripts/commit-data.sh "prediction tracking"

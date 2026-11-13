@@ -6,7 +6,10 @@ failure is invisible until the night it matters.
 """
 
 import random
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
+import pandas as pd
 import pytest
 import yaml
 
@@ -114,3 +117,43 @@ def test_refreshing_varies_the_no_school_line():
     data = V.load()
     seen = {V.no_school(data, random.Random(s))[0] for s in range(40)}
     assert len(seen) > 1
+
+
+# --------------------------------------------------------------------------
+# How old the number is
+# --------------------------------------------------------------------------
+
+STALE_AFTER = timedelta(hours=2)
+LOCAL_TZ = ZoneInfo("America/New_York")
+
+
+def test_a_fresh_reading_is_stamped_with_its_local_time():
+    at = pd.Timestamp("2026-01-15T20:42:00-05:00")
+    got = V.reading_age(at, "live", LOCAL_TZ, STALE_AFTER,
+                        now=datetime(2026, 1, 15, 21, 0, tzinfo=timezone.utc)
+                        + timedelta(hours=4))
+    assert got == "Updated 8:42 PM"
+
+
+def test_a_stale_reading_says_so_instead_of_hiding_it():
+    """The page used to answer this by fetching NWS per viewer, which turned
+    one broken capture job into thousands of blocking requests at the busiest
+    moment of the year. Telling the reader the number is old is the cheaper
+    and more honest answer."""
+    at = pd.Timestamp("2026-01-15T20:42:00-05:00")
+    now = at.to_pydatetime() + timedelta(hours=5)
+    got = V.reading_age(at, "live", LOCAL_TZ, STALE_AFTER, now=now)
+    assert got.startswith("Last updated 8:42 PM")
+    assert "Nothing newer" in got
+
+
+def test_the_frozen_call_carries_no_capture_time_and_is_not_called_stale():
+    """The ordinary-night path, and the one that used to trigger a fetch for
+    every viewer: on a quiet night no history row is written, so the number
+    comes from the call, which has no captured_at."""
+    assert V.reading_age(None, "call", LOCAL_TZ, STALE_AFTER) \
+        == "This is tonight's 8pm Call."
+
+
+def test_an_unknown_source_says_nothing_rather_than_guessing():
+    assert V.reading_age(None, "none", LOCAL_TZ, STALE_AFTER) == ""
