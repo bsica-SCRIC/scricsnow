@@ -628,8 +628,8 @@ else:
         sub = (f'<p class="muted">The 8pm Call was <b>{p_call * 100:.0f}%</b> '
                f"&nbsp;{arrow} since then</p>")
     else:
-        sub = ('<p class="muted">The 8pm Call has not been made yet tonight. '
-               "This number changes until then.</p>")
+        sub = ('<p class="muted">The 8pm Call has not been made yet. '
+               "This will update until then.</p>")
     if freshness:
         sub += f'<p class="muted">{freshness}</p>'
 

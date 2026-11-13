@@ -15,10 +15,10 @@
 bands:
   - name: no chance
     max: 0.03
-    emoji: ["📚", "✏️", "🎒"]
+    emoji: ["📚", "✏️", "🎒", "🚌", "⏰", "🏫", "📝"]
     messages:
       - "Go to bed. School is on."
-      - "Not a flake in sight."
+      - "Not even close."
       - "Set your alarm. Sorry."
       - "The buses are running."
       - "Do your homework. All of it."
@@ -26,17 +26,17 @@ bands:
 
   - name: slim
     max: 0.10
-    emoji: ["✏️", "🌤️", "🤔"]
+    emoji: ["✏️", "🌤️", "🤔", "🌥️", "🤏", "🧐", "🙃"]
     messages:
       - "Probably school. Pack the bag."
       - "A flurry or two, nothing more."
       - "Do not get your hopes up."
-      - "Long shot. Very long."
+      - "Long shot... Very long."
       - "Stranger things have happened. Not this though."
 
   - name: maybe
     max: 0.25
-    emoji: ["🤞", "👀", "❄️"]
+    emoji: ["🤞", "👀", "❄️", "🍀", "🔮", "🧤", "🌨️"]
     messages:
       - "There is a chance. A small one."
       - "Worth checking again later."
@@ -46,7 +46,7 @@ bands:
 
   - name: real chance
     max: 0.50
-    emoji: ["👀", "❄️", "😬"]
+    emoji: ["👀", "❄️", "😬", "🪙", "📡", "🧣", "😮"]
     messages:
       - "This could genuinely happen!"
       - "Coin flip."
@@ -56,7 +56,7 @@ bands:
 
   - name: likely
     max: 0.75
-    emoji: ["⛄", "🌨️", "🎉"]
+    emoji: ["⛄", "🌨️", "🎉", "☃️", "🥾", "☕", "🙌"]
     messages:
       - "Looking good for a snow day!"
       - "Leave the boots by the door."
@@ -66,40 +66,40 @@ bands:
 
   - name: near certain
     max: 1.0
-    emoji: ["🛷", "⛄", "🎉", "🥳"]
+    emoji: ["🛷", "⛄", "🎉", "🥳", "☃️", "⛷️", "🏂", "🌬️"]
     messages:
       - "Get the sled ready."
       - "This one looks like a snow day."
       - "Find the good gloves tonight."
       - "Big storm. Big odds."
-      - "Charge the tablet. You will have time."
+      - "Charge the tablets. You will have time."
       - "Somebody is building a snowman tomorrow."
 
 # Shown when the district has already announced, so no prediction is needed.
 announced:
   closed:
-    emoji: ["🎉", "🥳", "🛷"]
+    emoji: ["🎉", "🥳", "🛷", "🎊", "☃️", "🙌", "⛷️"]
     messages:
       - "IT IS OFFICIAL. Enjoy it."
       - "Called it. School is closed."
       - "Confirmed. Go back to sleep."
   delay:
-    emoji: ["🕐", "😴"]
+    emoji: ["🕐", "😴", "⏰", "🛌", "🥞"]
     messages:
       - "Delayed start. Extra sleep."
       - "A late start beats no sleep."
   early:
-    emoji: ["🏃", "🌨️"]
+    emoji: ["🏃", "🌨️", "🚌", "👋", "🏠"]
     messages:
       - "Out early today."
   remote:
-    emoji: ["💻"]
+    emoji: ["💻", "🏠", "🎧"]
     messages:
       - "Remote day. Not quite a snow day."
 
 # Shown when the forecast cannot be reached at all.
 unavailable:
-  emoji: ["🌫️"]
+  emoji: ["🌫️", "📡", "🙈"]
   messages:
     - "Cannot see the sky right now. Try again shortly."
 
@@ -107,7 +107,7 @@ unavailable:
 # would be meaningless. The reason (weekend, break, holiday) and the next school
 # day are added by the page; these are the opening line.
 no_school:
-  emoji: ["🎒", "😴", "🛌", "📅"]
+  emoji: ["🎒", "😴", "🛌", "📅", "🛋️", "🎮", "🏠"]
   messages:
     - "No school tomorrow anyway."
     - "Nothing to predict. School is already out."
@@ -120,7 +120,7 @@ no_school:
 # call it one night ahead, and saying so is more honest than serving a number
 # the model was never built for.
 too_far:
-  emoji: ["🔭", "📚", "🤷"]
+  emoji: ["🔭", "📚", "🤷", "🗓️", "⏳", "🧪"]
   messages:
     - "We only call it the night before. Check back then."
     - "Too far out for us. Ask your science teacher."
