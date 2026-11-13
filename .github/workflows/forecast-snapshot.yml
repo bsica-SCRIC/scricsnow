@@ -1,0 +1,81 @@
+# THE JOB THAT CANNOT BE MISSED.
+#
+# api.weather.gov serves no forecast history. Once tomorrow becomes today,
+# tonight's forecast is gone permanently, so a night not captured is a training
+# row lost forever. Every other job here can fail and be repaired later.
+#
+# ON CRON AND DAYLIGHT SAVING, once, for all three workflows. GitHub cron is
+# UTC, and the season spans both transitions. These times are set for EST, the
+# standard time that covers most of October to April; in the shoulder weeks the
+# captures land an hour off local. That is deliberate. The alternative is
+# firing at both offsets, which doubles the API calls all winter to fix a few
+# weeks, and the 22:00 gap-fill run corrects any night that actually went
+# missing. Note also that Actions cron is best effort: it drifts five to thirty
+# minutes and occasionally skips a firing outright, which is the other reason
+# the backup run exists.
+name: forecast-snapshot
+
+on:
+  schedule:
+    - cron: "0 1 * * *"    # 20:00 EST -- the evening capture the model trains on
+    - cron: "0 3 * * *"    # 22:00 EST -- gap-fill, writes only what is missing
+    - cron: "0 10 * * *"   # 05:00 EST -- the morning capture, for lead-time work
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: "YYYY-MM-DD to capture (blank = derive from the clock)"
+        required: false
+      if_missing:
+        description: "Only fill districts not already captured in this slot"
+        type: boolean
+        default: false
+
+# Runs year-round, not just in winter. Two reasons: the shoulder-season rows
+# are worth having, and GitHub disables cron on a repository with sixty days of
+# no activity, so this is what keeps every other schedule alive.
+permissions:
+  contents: write
+
+concurrency:
+  group: forecast-snapshot
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Put the data branch where the code expects data/
+        run: rm -rf data
+      - uses: actions/checkout@v4
+        with:
+          ref: data
+          path: data
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      # requirements.txt rather than a shorter list, so the collectors and the
+      # served app cannot drift onto different pandas versions.
+      - run: pip install -r requirements.txt
+
+      - name: Capture the forecast
+        run: |
+          args=""
+          if [ "${{ github.event.schedule }}" = "0 3 * * *" ] \
+             || [ "${{ inputs.if_missing }}" = "true" ]; then
+            args="--if-missing"
+          fi
+          python collect/nws.py ${{ inputs.target_date }} $args
+
+      # !cancelled(), not success(). collect/nws.py writes the rows and THEN
+      # exits non-zero if the frame looks wrong, so a failure still has data
+      # worth keeping and evidence worth reading.
+      - name: Commit
+        if: ${{ !cancelled() }}
+        run: .github/scripts/commit-data.sh "forecast snapshot"

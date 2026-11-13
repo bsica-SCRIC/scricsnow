@@ -1,0 +1,79 @@
+# The closings feed, archived.
+#
+# RUNS YEAR-ROUND, STARTING NOW, AND THAT IS THE POINT.
+#
+# We have never seen a non-empty payload. collect/news.py is built around that:
+# NAME_KEYS and STATUS_KEYS are educated guesses, the raw JSON is archived
+# before anything interprets it, and the job exits non-zero if the guesses turn
+# out to be wrong.
+#
+# The feed does not only carry our fifty districts. It carries every school,
+# church and daycare in the WBNG viewing area, well into Pennsylvania. So the
+# first Pennsylvania fog delay in October produces a real payload with real
+# field names, months before a single snowflake falls here. That is the schema
+# discovery event, and it is free. The Pennsylvania districts are not noise,
+# they are the test fixture this job has been waiting on since August.
+#
+# When the first real payload lands: read data/outcomes/raw/, correct the
+# candidate lists in collect/news.py, and add any name the token matching
+# cannot reach to reference/district_aliases.csv.
+name: closings-archive
+
+on:
+  schedule:
+    # The settle-up run: once a morning, every day of the year. This is the one
+    # that writes the checks row, which is what lets the scorecard tell "nobody
+    # closed" from "the job never ran".
+    - cron: "0 14 * * *"    # 09:00 EST
+    # Announcement window, October through April. A closing posted at 05:42 is
+    # stale by 06:00, and unlike the forecast this genuinely does move on a
+    # fifteen-minute scale.
+    - cron: "*/15 10-13 * 10,11,12,1,2,3,4 *"
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: "YYYY-MM-DD the closings are for (blank = today)"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: closings-archive
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Put the data branch where the code expects data/
+        run: rm -rf data
+      - uses: actions/checkout@v4
+        with:
+          ref: data
+          path: data
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # news.main() returns an exit code rather than calling sys.exit, so the
+      # alarm is testable. A non-zero exit here emails the repository owner,
+      # which is the only alerting channel this project has -- hence the
+      # deliberately narrow checks in news.health().
+      - name: Read the feed
+        run: python collect/news.py ${{ inputs.target_date }}
+
+      # !cancelled(), because the interesting failure is the one where the
+      # field-name guesses were wrong: the raw JSON and the checks row are
+      # already written, and they are exactly the evidence needed to fix it.
+      - name: Commit
+        if: ${{ !cancelled() }}
+        run: .github/scripts/commit-data.sh "closings archive"

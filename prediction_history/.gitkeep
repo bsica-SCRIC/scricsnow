@@ -1,0 +1,4 @@
+Keeps this directory in git. track.py writes history_{season}.csv here,
+but only on nights worth recording, so on a fresh clone it stays empty.
+Git does not track empty directories, and the tracking workflow's
+"git add data/prediction_history" fails outright if the directory is missing.
