@@ -54,6 +54,15 @@ def test_a_morning_run_is_about_today_not_tomorrow():
     assert target == date(2027, 1, 13) and ok and lead == 0
 
 
+def test_the_page_rolls_over_at_the_end_of_the_school_day():
+    """Until 4pm the page is still about today, so a district that closed this
+    morning keeps reading as closed through the afternoon."""
+    target, _, _, _ = SD.target_for(datetime(2027, 1, 13, 15, 59), CAL)
+    assert target == date(2027, 1, 13)
+    target, _, _, _ = SD.target_for(datetime(2027, 1, 13, 16, 0), CAL)
+    assert target == date(2027, 1, 14)
+
+
 def test_friday_evening_gets_no_number():
     """We only call it the night before. Monday from Friday is three days out,
     far outside the lead time the accuracy record is measured at."""

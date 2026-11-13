@@ -40,6 +40,11 @@ SUMMER_MONTHS = {7, 8}
 # How far ahead we are willing to put a number on it. One means tomorrow.
 MAX_LEAD_DAYS = 1
 
+# The hour the page stops talking about today and moves to the next school
+# day: 16:00, the end of the school day. Until then a district that closed
+# this morning still reads as closed.
+ROLLOVER_HOUR = 16
+
 # Give up rather than loop forever if the calendar is nonsense.
 SEARCH_LIMIT = 60
 
@@ -89,7 +94,8 @@ def next_school_day(after, calendar, limit=SEARCH_LIMIT):
     return None
 
 
-def target_for(now, calendar, morning_before_hour=12, max_lead=MAX_LEAD_DAYS):
+def target_for(now, calendar, morning_before_hour=ROLLOVER_HOUR,
+               max_lead=MAX_LEAD_DAYS):
     """What day to talk about, and whether to put a number on it.
 
     Returns (target, predictable, reason_off, lead_days).
@@ -100,7 +106,7 @@ def target_for(now, calendar, morning_before_hour=12, max_lead=MAX_LEAD_DAYS):
       lead_days   days from now until target
     """
     today = now.date()
-    # A morning run is about today; any later run is about tomorrow.
+    # Until the school day ends the page is about today; after, tomorrow.
     immediate = today if now.hour < morning_before_hour else today + timedelta(days=1)
 
     why = reason_off(immediate, calendar)

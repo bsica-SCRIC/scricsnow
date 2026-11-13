@@ -529,7 +529,7 @@ st.caption(f"For the morning of **{when}**" if predictable
            else f"Next school day is **{when}**")
 
 closings, meta = load_closings()
-# Only announcements about the morning on the page. After noon the page has
+# Only announcements about the morning on the page. After 4pm the page has
 # moved on to the next school day, and this morning's "Closed Friday" is still
 # in the feed.
 if len(closings) and "for_date" in closings.columns:
