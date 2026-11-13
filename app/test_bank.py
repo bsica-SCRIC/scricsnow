@@ -35,6 +35,14 @@ def test_remote_days_do_not_spend_a_day():
     assert bank.spent(o, "3600001") == 1
 
 
+def test_emergency_days_spend_a_day():
+    """The calendar cannot say why a district closed, but any emergency
+    closure comes out of the same bank, snow or not."""
+    o = outcomes([("3600001", "2026-01-05", "emergency"),
+                  ("3600001", "2026-01-06", "closed")])
+    assert bank.spent(o, "3600001") == 2
+
+
 def test_the_same_day_twice_spends_one_day():
     """The feed is archived several times a morning and a district can be
     restated. Counting rows instead of dates would double-charge them."""

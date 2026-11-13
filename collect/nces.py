@@ -123,7 +123,8 @@ def to_district_beds(code):
     those without weakening anything: the reference holds only district-level
     codes, so this can never collapse two real districts.
     """
-    if code is None:
+    # Not just None: pandas 3 hands a missing value to .map() as NaN, a float.
+    if not isinstance(code, str):
         return None
     return code[:8] + "0000"
 

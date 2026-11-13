@@ -46,16 +46,16 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Check out the code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Put the data branch where the code expects data/
         run: rm -rf data
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: data
           path: data
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -78,4 +78,4 @@ jobs:
       # worth keeping and evidence worth reading.
       - name: Commit
         if: ${{ !cancelled() }}
-        run: .github/scripts/commit-data.sh "forecast snapshot"
+        run: bash .github/scripts/commit-data.sh "forecast snapshot"

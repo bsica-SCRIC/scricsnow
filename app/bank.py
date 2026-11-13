@@ -31,13 +31,16 @@ OUTCOMES_DIR = os.path.join(ROOT, "data", "outcomes")
 
 # Statuses that spend a day from the bank.
 #
-# Only a full closure does. A delay or an early dismissal still holds a session
+# A full closure does, and so does an `emergency` day from the calendar
+# reconcile: the calendar does not say why the district closed, but in NY any
+# emergency closure comes out of the same bank, snow or not. A delay or an
+# early dismissal still holds a session
 # and costs nothing. `remote` is deliberately excluded: whether a remote day
 # counts toward the 180 has moved around in NY since 2022 and has never been
 # pinned down here. Excluding it means that if districts do start taking
 # remote days, the burndown under-counts rather than inventing days a parent
 # would then not have to make up.
-SPENDS_A_DAY = {"closed"}
+SPENDS_A_DAY = {"closed", "emergency"}
 
 
 def season_of(d):

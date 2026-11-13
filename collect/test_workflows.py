@@ -128,7 +128,20 @@ def test_writes_go_to_the_data_branch_not_the_deployed_one(path):
         f"{os.path.basename(path)} does not check out the data branch")
 
 
-def test_the_commit_script_exists_and_is_executable():
+@pytest.mark.parametrize("path", workflows(), ids=os.path.basename)
+def test_the_commit_script_is_run_through_bash(path):
+    """Not run directly. Git on Windows commits the script as 100644, and the
+    runner then refuses it with 'Permission denied', exit 126. That is how the
+    first real run failed. `bash script` needs no executable bit."""
+    doc = load(path)
+    steps = [s for job in doc["jobs"].values() for s in job["steps"]]
+    for step in steps:
+        run = str(step.get("run", ""))
+        if "commit-data.sh" in run:
+            assert run.lstrip().startswith("bash "), run
+
+
+def test_the_commit_script_exists():
     path = os.path.join(ROOT, ".github", "scripts", "commit-data.sh")
     assert os.path.exists(path)
     with open(path, encoding="utf-8") as fh:
