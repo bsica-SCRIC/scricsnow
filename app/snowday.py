@@ -96,7 +96,40 @@ MAP_COLOURS = {
     },
 }
 
-ANNOUNCED_FILL = "#facc15"               # gold, legible in either theme
+# What a district actually did this morning, on the map.
+#
+# WCAG 2.1, the two criteria a coloured map can fail:
+#   1.4.11 non-text contrast: every fill here is at least 3:1 against the page
+#          background and against a quiet district, in its own theme. One
+#          colour cannot do that on both a white and a navy page, hence two
+#          sets. (The old single gold was 1.5:1 on the light theme.)
+#   1.4.1  use of colour: colour is never the only carrier. The legend names
+#          each colour, the tooltip names the status, and the same districts
+#          are listed in words under the map.
+STATUS_FILLS = {
+    "light": {"closed": "#92400e", "delay": "#be185d", "early": "#5b21b6"},
+    "dark": {"closed": "#facc15", "delay": "#fb7185", "early": "#d8b4fe"},
+}
+STATUS_LABELS = {"closed": "Closed", "delay": "Delayed",
+                 "early": "Early dismissal"}
+
+
+def status_bucket(status):
+    """Which of the three map colours a recorded status gets.
+
+    Remote and emergency days are days without school in the building, so
+    they sit with closed. Anything unrecognized does too: a district that
+    announced something is better shown as announced than as a percentage.
+    """
+    return status if status in ("delay", "early") else "closed"
+
+
+def short_name(district):
+    for tail in (" Central School District at Delhi", " and Central School District",
+                 " Central School District", " City School District"):
+        if district.endswith(tail):
+            return district[: -len(tail)]
+    return district
 
 
 def style(theme, snowing):
@@ -535,6 +568,21 @@ closings, meta = load_closings()
 if len(closings) and "for_date" in closings.columns:
     closings = closings[closings["for_date"].isna()
                         | (closings["for_date"] == target_iso)]
+
+# The feed drops its records mid-morning (11:00 on the first real day), hours
+# before the page moves on at 4pm. What was already recorded for this morning
+# fills in behind it, so a district that closed keeps reading as closed all
+# afternoon. The live feed wins where it still has the district: it is newer.
+saved = load_outcomes(B.season_of(target))
+if len(saved):
+    saved = saved[(saved["date"].astype(str) == target_iso)
+                  & saved["status"].notna() & (saved["status"] != "open")]
+    live_ids = set(closings["leaid"].dropna()) if len(closings) else set()
+    saved = saved[~saved["leaid"].isin(live_ids)]
+    if len(saved):
+        closings = pd.concat(
+            [closings, saved[["leaid", "status"]].assign(status_text="")],
+            ignore_index=True)
 announced = None
 if len(closings):
     hit = closings[closings["leaid"] == row["leaid"]]
@@ -607,8 +655,11 @@ polys = load_shapes()
 if len(polys):
     st.markdown("### Our Districts")
     colours = MAP_COLOURS[theme]
-    closed_ids = (set(closings.loc[closings["leaid"].notna(), "leaid"])
-                  if len(closings) else set())
+    # leaid -> closed / delay / early, for every district that has announced.
+    did = ({leaid: status_bucket(status) for leaid, status in
+            zip(closings["leaid"], closings["status"]) if isinstance(leaid, str)}
+           if len(closings) else {})
+    status_fills = STATUS_FILLS[theme]
 
     # The map is worth showing on a Sunday in July as well as a Tuesday in
     # January. On a day with no school it carries no probabilities -- every
@@ -620,9 +671,9 @@ if len(polys):
 
     fills, tips = {}, {}
     for leaid, name in zip(polys["leaid"], polys["name"]):
-        if leaid in closed_ids:
-            fills[leaid] = ANNOUNCED_FILL
-            tips[leaid] = f"{name} - announced"
+        if leaid in did:
+            fills[leaid] = status_fills[did[leaid]]
+            tips[leaid] = f"{name} - {STATUS_LABELS[did[leaid]].lower()}"
         elif scored:
             p = float(probs.get(leaid, 0.0))
             fills[leaid] = fill_for(p, theme)
@@ -646,13 +697,33 @@ if len(polys):
     if scored:
         note = (f"{colours['word']} means a higher chance. "
                 "Your district is outlined.")
-        if closed_ids:
-            note = f"Gold means already announced. {note}"
     else:
         note = (f"The {polys['leaid'].nunique()} districts covered. "
                 "Yours is outlined. No chances shown, because there is no "
                 "school to close.")
     st.caption(note)
+
+    # What the region actually did. A legend with words on it, then the same
+    # districts as a list, so nothing here depends on telling colours apart.
+    if did:
+        names = dict(zip(polys["leaid"], polys["name"]))
+        swatches, lines = [], []
+        for key, label in STATUS_LABELS.items():
+            who = sorted(short_name(names[l]) for l, s in did.items()
+                         if s == key and l in names)
+            if not who:
+                continue
+            swatches.append(
+                f'<span style="white-space:nowrap;margin-right:1.1em">'
+                f'<span aria-hidden="true" style="display:inline-block;'
+                f'width:.85em;height:.85em;border-radius:2px;'
+                f'vertical-align:-.08em;margin-right:.35em;'
+                f'background:{status_fills[key]}"></span>{label}</span>')
+            lines.append(f"**{label} ({len(who)}):** {', '.join(who)}")
+        if lines:
+            st.markdown(f'<p class="muted">{"".join(swatches)}</p>',
+                        unsafe_allow_html=True)
+            st.markdown("  \n".join(lines))
 
 # --- how the number moved ---------------------------------------------------
 hist = TRACK.load_history(target_iso)
