@@ -38,6 +38,7 @@ sys.path.insert(0, os.path.join(ROOT, "model"))
 sys.path.insert(0, os.path.join(ROOT, "collect"))
 
 import bank as B           # noqa: E402
+import datasync            # noqa: E402
 import heuristic as H      # noqa: E402
 import news as NEWS        # noqa: E402
 import nws                 # noqa: E402
@@ -368,6 +369,21 @@ def fill_for(p, theme):
 # Page
 # --------------------------------------------------------------------------
 
+# Fresh numbers from the `data` branch, at most every five minutes, for the
+# whole server rather than per viewer. See app/datasync.py. The loaders above
+# keep their own TTLs, so new numbers show within one of those after landing.
+# Only on Streamlit Cloud (served from /mount/src) unless SCRICSNOW_SYNC=1:
+# locally it would overwrite the tracked floor copy in data/ and dirty main.
+@st.cache_data(ttl=300, show_spinner=False)
+@resilient(0, "the data branch")
+def sync_data():
+    return datasync.pull()
+
+
+if (os.path.abspath(ROOT).startswith("/mount/src")
+        or os.environ.get("SCRICSNOW_SYNC") == "1"):
+    sync_data()
+
 roster = load_roster()
 verdict_data = load_verdicts()
 
@@ -513,6 +529,12 @@ st.caption(f"For the morning of **{when}**" if predictable
            else f"Next school day is **{when}**")
 
 closings, meta = load_closings()
+# Only announcements about the morning on the page. After noon the page has
+# moved on to the next school day, and this morning's "Closed Friday" is still
+# in the feed.
+if len(closings) and "for_date" in closings.columns:
+    closings = closings[closings["for_date"].isna()
+                        | (closings["for_date"] == target_iso)]
 announced = None
 if len(closings):
     hit = closings[closings["leaid"] == row["leaid"]]

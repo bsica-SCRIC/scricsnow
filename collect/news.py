@@ -14,9 +14,24 @@ Two consumers, with opposite needs:
                 outcome. For the two districts with no history behind them it
                 is the only source of outcomes there is.
 
-WE HAVE NEVER SEEN A NON-EMPTY PAYLOAD. In August `locations` is `[]`, so the
-record shape is a guess until the first real closing, probably in December.
-Everything below is built around that:
+THE SHAPE, from the first real payload on 2026-11-13 (40 records):
+
+    [ { "record": [ {...}, ... ],        <- the closings
+        "locations": ["New York"],       <- a list of STATE NAMES, not records
+        "num_closings": 40, ... } ]
+
+    each record:  forced_organization_name   "Unatego School District"
+                  forced_status_name         "Delayed Friday 2 Hours"
+                  forced_category_name       "Schools"
+                  state                      "NEW YORK"
+                  comments_line1             "No After School Activities"
+                  expiration, updated        "2026-11-13 11:00:00", "2026-11-13"
+
+The status names the weekday it is for, because closings are also posted the
+evening before. closure_date() turns that into a date.
+
+This was written before any payload had been seen, and it is still built to
+survive the feed changing shape:
 
   - the raw JSON is archived verbatim whenever it is non-empty, BEFORE any
     parsing, so a wrong guess costs nothing that cannot be recovered
@@ -24,8 +39,11 @@ Everything below is built around that:
   - every parsed row keeps the original record in a `raw` column
   - unparsed records are reported loudly, not skipped quietly
 
-When the first closing arrives, read data/outcomes/raw/, correct the candidate
-lists below, and re-parse the archive. Nothing is lost in the meantime.
+MATCHING IS A LITTLE GREEDY, ON PURPOSE. The feed says "Afton School
+District", "Gilbertsville-Mt. Upton Schools" and "Unatego School District";
+none is the official name. It also carries Head Starts, private schools and
+BOCES campuses that share a town name with a district. match_roster() explains
+where the line is.
 """
 
 import json
@@ -51,17 +69,18 @@ RAW_DIR = os.path.join(OUT_DIR, "raw")
 HEADERS = {"User-Agent": "scricsnow/0.1 (snow day predictor; bsica@btboces.org)",
            "Accept": "application/json"}
 
-# Candidate field names, most likely first. Extend from the first real payload.
-NAME_KEYS = ["name", "location", "location_name", "title", "organization",
+# Field names, the real ones first. The rest are the pre-season guesses, kept
+# because they cost nothing and the feed's vendor could change.
+NAME_KEYS = ["forced_organization_name", "organization_name", "name", "location", "location_name", "title", "organization",
              "school", "district", "institution", "displayName"]
-STATUS_KEYS = ["status", "closing_status", "closing_type", "type", "message",
+STATUS_KEYS = ["forced_status_name", "status_name", "status", "closing_status", "closing_type", "type", "message",
                "statusText", "condition", "note"]
 
 # Text patterns to normalize a status into the vocabulary the model uses.
 STATUS_PATTERNS = [
     (r"\bclos(ed|ing|ure)\b|\bcancel", "closed"),
     (r"\b(\d+\s*(hour|hr)|two|one)\b.*\bdelay|delay|late\s*(start|arrival)|"
-     r"\bdelayed\b", "delay"),
+     r"\bdelayed\b|\bopen(ing|s)?\s*late", "delay"),
     (r"early\s*(dismissal|release|out)", "early"),
     (r"\bremote\b|\bvirtual\b|\bonline\b", "remote"),
     (r"\bopen\b|\bnormal\b|\bas\s*scheduled\b", "open"),
@@ -97,8 +116,37 @@ def locations_of(payload):
     out = []
     for block in payload:
         if isinstance(block, dict):
-            out.extend(block.get("locations") or [])
+            # "record" is the real key. "locations" was the pre-season guess;
+            # in the real feed it is a list of state names, so it is only
+            # read when there is no "record" at all.
+            if "record" in block:
+                out.extend(block.get("record") or [])
+            else:
+                out.extend(block.get("locations") or [])
     return out
+
+
+WEEKDAYS = ["monday", "tuesday", "wednesday", "thursday", "friday",
+            "saturday", "sunday"]
+
+
+def closure_date(status_text, updated):
+    """The date a status is for, as YYYY-MM-DD, or None if it does not say.
+
+    "Closed Friday" posted Thursday evening is about Friday. The day named is
+    the first such weekday on or after the day the record was updated.
+    """
+    if not status_text or not updated:
+        return None
+    start = pd.to_datetime(str(updated)[:10], errors="coerce")
+    if pd.isna(start):
+        return None
+    low = str(status_text).lower()
+    for i, day in enumerate(WEEKDAYS):
+        if re.search(rf"\b{day}\b", low):
+            ahead = (i - start.weekday()) % 7
+            return (start + pd.Timedelta(days=ahead)).strftime("%Y-%m-%d")
+    return None
 
 
 def _first_key(record, candidates):
@@ -132,8 +180,23 @@ def normalize_status(text):
 GENERIC_WORDS = {
     "school", "schools", "district", "districts", "dist", "central",
     "city", "union", "free", "common", "csd", "ufsd", "sd", "cs",
-    "the", "of", "at",
+    "the", "of", "at", "and",
 }
+
+# Abbreviations the feed uses inside a name: "Gilbertsville-Mt. Upton".
+TOKEN_SYNONYMS = {"mt": "mount", "so": "south", "no": "north"}
+
+# Words a feed name may carry BEYOND a district's own without changing who it
+# is: "Walton Public Schools", "Oxford Academy". Anything else extra ("Head
+# Start", "Christian", "High", "Holy Family") means a different organization
+# in the same town, which is why this list is short.
+HARMLESS_EXTRAS = {"academy", "public", "area", "community", "ny"}
+
+
+def _tokens(text):
+    cleaned = re.sub(r"[^a-z0-9 ]", " ", str(text).lower())
+    return {TOKEN_SYNONYMS.get(t, t) for t in cleaned.split()
+            if t and t not in GENERIC_WORDS}
 
 
 def _norm_name(text):
@@ -145,81 +208,122 @@ def _norm_name(text):
     still unique in this roster, while keeping it would break the match on
     "Johnson City CSD".
     """
-    cleaned = re.sub(r"[^a-z0-9 ]", " ", str(text).lower())
-    tokens = [t for t in cleaned.split() if t and t not in GENERIC_WORDS]
-    return " ".join(sorted(tokens))
+    return " ".join(sorted(_tokens(text)))
 
 
 def match_roster(names, roster):
-    """Map feed names to LEAIDs. Exact-ish on a normalized key only.
+    """Map feed names to LEAIDs. A little greedy, and no more than that.
 
-    Deliberately conservative. A feed carries every school, church and daycare
-    in the viewing area, so loose matching would attach a daycare closure to a
-    district. Unmatched names are returned for review rather than guessed at.
+    Tried in order, stopping at the first that answers:
+
+      1. The alias file, for local names no rule can derive ("Unatego" is
+         Otego-Unadilla). An alias with a blank leaid means "never match".
+      2. The same identifying words: "Afton School District".
+      3. Fewer words than the district, if only one district has them all:
+         "Delhi" for Delaware Academy at Delhi, "Cherry Valley" for Cherry
+         Valley-Springfield. "Unadilla" alone fits two districts and matches
+         neither.
+      4. The district's words plus only HARMLESS_EXTRAS.
+
+    What it will not do is match on a shared town name. "Norwich Head Start",
+    "Holy Family School- Norwich" and "Franklin Head Start" all carry a
+    district's word plus something else, and a Head Start closing filed as a
+    district snow day is worse than a miss: a miss is visible as unmatched,
+    and a wrong match is not.
     """
-    lookup = {}
-    collisions = set()
-    for leaid, district in zip(roster["leaid"], roster["district"]):
-        key = _norm_name(district)
-        if key in lookup and lookup[key] != leaid:
-            collisions.add(key)
-        lookup[key] = leaid
-    # Two districts reducing to the same key cannot be told apart, so neither
-    # is matched. Silently picking one would attach closures to the wrong
-    # district, which is worse than reporting nothing.
-    for key in collisions:
-        lookup.pop(key, None)
-
+    districts = [(frozenset(_tokens(d)), leaid)
+                 for leaid, d in zip(roster["leaid"], roster["district"])]
+    districts = [(toks, leaid) for toks, leaid in districts if toks]
     aliases = load_aliases()
+
+    def only(candidates):
+        ids = {leaid for _, leaid in candidates}
+        return ids.pop() if len(ids) == 1 else None
+
     out = {}
     for name in names:
-        if name in aliases:
-            out[name] = aliases[name]
-            continue
         key = _norm_name(name)
-        if key in lookup:
-            out[name] = lookup[key]
+        if key in aliases:
+            if aliases[key]:
+                out[name] = aliases[key]
+            continue
+        toks = frozenset(key.split())
+        if not toks:
+            continue
+        same = [d for d in districts if d[0] == toks]
+        if same:
+            # Two districts with the same words cannot be told apart, and
+            # picking one would file closures against the wrong district.
+            hit = only(same)
+        else:
+            hit = only([d for d in districts if toks < d[0]]) or only(
+                [d for d in districts
+                 if d[0] < toks and toks - d[0] <= HARMLESS_EXTRAS])
+        if hit:
+            out[name] = hit
     return out
 
 
 def load_aliases(path=None):
-    """Hand-maintained feed-name overrides, for names token matching misses.
+    """Hand-maintained feed-name overrides: {normalized name: leaid}.
 
-    Expected to stay empty until the first real payload shows which names the
-    feed actually uses. Two columns: feed_name, leaid.
+    Two columns, feed_name and leaid. Names are compared after the same
+    normalizing as everything else, so one row for "Unatego" covers "Unatego
+    School District" and "UNATEGO CSD". A blank leaid blocks a name that the
+    rules would otherwise match to the wrong district.
     """
     path = path or os.path.join(ROOT, "reference", "district_aliases.csv")
     if not os.path.exists(path):
         return {}
-    df = pd.read_csv(path, dtype=str)
-    return dict(zip(df["feed_name"], df["leaid"]))
+    df = pd.read_csv(path, dtype=str, comment="#").fillna("")
+    return {_norm_name(n): l.strip()
+            for n, l in zip(df["feed_name"], df["leaid"])}
+
+
+def _field(rec, key):
+    value = rec.get(key)
+    return value.strip() if isinstance(value, str) and value.strip() else None
 
 
 def parse(payload, roster=None):
-    """Records to a tidy frame. Keeps the original dict on every row."""
+    """Records to a tidy frame. Keeps the original dict on every row.
+
+    for_date is the day the status is about, when the status names one.
+    Only New York records in the Schools category are offered to the roster
+    match; the feed's other categories and states are kept as rows and left
+    unmatched.
+    """
     records = locations_of(payload)
     rows = []
     for rec in records:
         if not isinstance(rec, dict):
             rows.append({"name": None, "status_text": None, "status": None,
-                         "raw": json.dumps(rec)})
+                         "raw": json.dumps(rec), "eligible": False})
             continue
         name = _first_key(rec, NAME_KEYS)
         status_text = _first_key(rec, STATUS_KEYS)
+        category = _field(rec, "forced_category_name")
+        state = _field(rec, "state")
         rows.append({
             "name": name,
             "status_text": status_text,
             "status": normalize_status(status_text),
             "raw": json.dumps(rec, sort_keys=True),
+            "for_date": closure_date(status_text, rec.get("updated")),
+            "comment": _field(rec, "comments_line1"),
+            "eligible": ((category is None or "school" in category.lower())
+                         and (state is None or state.lower() == "new york")),
         })
 
-    df = pd.DataFrame(rows, columns=["name", "status_text", "status", "raw"])
+    df = pd.DataFrame(rows, columns=["name", "status_text", "status", "raw",
+                                     "for_date", "comment", "eligible"])
     if roster is not None and len(df):
-        matched = match_roster([n for n in df["name"] if n], roster)
-        df["leaid"] = df["name"].map(matched)
+        ours = df["eligible"].astype(bool) & df["name"].notna()
+        matched = match_roster(list(df.loc[ours, "name"]), roster)
+        df["leaid"] = df["name"].where(ours).map(matched)
     else:
         df["leaid"] = None
-    return df
+    return df.drop(columns="eligible")
 
 
 # Fraction of records that must parse before we believe our field guesses.
@@ -343,7 +447,14 @@ def log_check(meta, target_date, out_dir=OUT_DIR):
 
 
 def write_outcomes(df, target_date, out_dir=OUT_DIR):
-    """Append matched closures to the season file, replacing the same day."""
+    """Add matched closures to the season file, one row per district-day.
+
+    A district in this run replaces its own row for the day, so a delay that
+    becomes a closure is updated. A district NOT in this run keeps the row it
+    had: records expire off the feed mid-morning (11:00 on the first real
+    day), and the job runs after that too, so replacing the whole day would
+    erase everyone who had already dropped off.
+    """
     if df.empty:
         return None
     os.makedirs(out_dir, exist_ok=True)
@@ -351,12 +462,19 @@ def write_outcomes(df, target_date, out_dir=OUT_DIR):
     season = d.year if d.month >= 7 else d.year - 1
     path = os.path.join(out_dir, f"outcomes_{season}.csv")
 
-    df = df.copy()
+    # One row per district, the most serious status first: the feed can carry
+    # two names that are the same district.
+    rank = {"closed": 0, "remote": 1, "delay": 2, "early": 3}
+    df = df.assign(_r=df["status"].map(rank).fillna(9))
+    df = (df.sort_values("_r").drop_duplicates("leaid").drop(columns="_r")
+            .sort_values("leaid"))
     df["date"] = d.strftime("%Y-%m-%d")
     if os.path.exists(path):
         old = pd.read_csv(path, dtype={"leaid": str})
-        old = old[old["date"] != df["date"].iloc[0]]
+        same_day = old["date"] == df["date"].iloc[0]
+        old = old[~(same_day & old["leaid"].isin(df["leaid"]))]
         df = pd.concat([old, df], ignore_index=True)
+        df = df.sort_values(["date", "leaid"])
     df.to_csv(path, index=False)
     return path
 
@@ -427,6 +545,10 @@ def main(argv=None, out_dir=None, raw_dir=None, url=FEED, roster=None):
 
     if len(df):
         keep = df[df["leaid"].notna()].copy()
+        # "Closed Monday" read on Sunday evening is not about Sunday. A status
+        # that names no day is taken to be about the day being collected.
+        if "for_date" in keep.columns:
+            keep = keep[keep["for_date"].isna() | (keep["for_date"] == target)]
         if len(keep):
             path = write_outcomes(
                 keep[["leaid", "name", "status", "status_text"]], target,
@@ -435,7 +557,9 @@ def main(argv=None, out_dir=None, raw_dir=None, url=FEED, roster=None):
         else:
             print("no tracked districts in the feed right now")
         print()
-        print(df.head(20).to_string(index=False))
+        # Without the raw column: it is the whole record as JSON, and it is
+        # already in the archive.
+        print(df.drop(columns="raw").to_string(index=False))
     elif meta.get("ok"):
         print("feed is empty; nothing closed right now")
 

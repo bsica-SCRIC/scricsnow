@@ -1,0 +1,8 @@
+# Feed names the matching rules in collect/news.py cannot derive.
+# Compared after normalizing, so "Unatego" covers "Unatego School District".
+# A blank leaid means "never match this name".
+feed_name,leaid
+Unatego,3629240
+Otselic Valley,3622100
+GMU,3604757
+WAJ,3631590
